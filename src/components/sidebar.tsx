@@ -15,7 +15,8 @@ import {
   DollarSign,
   BookImage,
   NotepadText,
-  NotebookPen
+  NotebookPen,
+  Cross
 } from 'lucide-react';
 import { SidebarDesktop } from './sidebar-desktop';
 import { SidebarItems } from '@/types';
@@ -26,13 +27,13 @@ import { SidebarMobile } from './sidebar-mobile';
 const sidebarItems: SidebarItems = {
   links: [
     { label: 'Home', href: '/', icon: Home },
-    { label: 'Pacientes', href: '/pacientes', icon: PersonStanding },
-    { label: 'Ficha de Avaliações', href: '/fichaAvaliacoes', icon: NotebookPen },
+    { label: 'Cadastro Principal', href: '/cadastro', icon: PersonStanding },
+    { label: 'Ficha de Avaliações', href: '/fichaAvaliacoes', icon: NotepadText },
     { label: 'Fotos de Acompanhamento', href: '/fotos', icon: BookImage },
     { label: 'Mensalidades', href: '/mensalidades', icon: DollarSign },
-    { label: 'Avaliações', href: '/avaliacoes', icon: NotepadText },
-    { label: 'Osteopatia', href: '/osteopatia', icon: HandHelping },    
-    
+    { label: 'Exames Complementares', href: '/exames', icon: Cross },
+    { label: 'Avaliações', href: '/avaliacoes', icon: NotebookPen },
+    { label: 'Osteopatia', href: '/osteopatia', icon: HandHelping }       
   ]
 };
 

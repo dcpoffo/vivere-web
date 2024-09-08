@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="pt-br" className="light">
       <body className={inter.className}>
         <Sidebar />
-        <Header />
+        {/* <Header /> */}
         <main className="mx-5 mt-16 sm:ml-[300px] sm:mt-3">
           {children}
         </main>
