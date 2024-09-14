@@ -8,9 +8,10 @@ import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Button } from './ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { LogOut, MoreHorizontal, Settings, Search } from 'lucide-react';
-import { useState } from 'react';
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
+import { useEffect, useState } from 'react';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
 import { usePathname } from 'next/navigation';
+import { pacientes_id_nome } from '@/app/utils/pacientes_id_nome';
 
 interface SidebarDesktopProps {
   sidebarItems: SidebarItems;
@@ -20,6 +21,30 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
   const pathname = usePathname();
   const [ isSearchOpen, setIsSearchOpen ] = useState(false);
   const [ searchTerm, setSearchTerm ] = useState('Vivere-web'); // Estado para o termo de busca
+  const [ students, setStudents ] = useState([]);
+  const [ filteredStudents, setFilteredStudents ] = useState([]);
+
+  useEffect(() => {
+    if (isSearchOpen) {
+      fetch('http://127.0.0.1:3333/alunos') // Exemplo de endpoint
+        .then((response) => response.json())
+        .then((data) => {
+          setStudents(data); // Armazena os dados da API
+          setFilteredStudents(data); // Inicializa o filtro com todos os alunos
+        })
+        .catch((error) => console.error('Erro ao buscar alunos:', error));
+    }
+  }, [ isSearchOpen ]);
+
+  // Filtra os alunos conforme o termo de busca
+  useEffect(() => {
+    setFilteredStudents(
+      students.filter((student) =>
+        student.NOME.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [ searchTerm, students ]);
+
 
   return (
     <aside className='w-[270px] max-w-xs h-screen fixed left-0 top-0 z-40 border-r'>
@@ -85,9 +110,9 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
 
       {/* Modal de Pesquisa */}
       <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
-        <DialogContent>
+        <DialogContent className="fixed inset-0 z-50 w-full max-w-lg mx-auto mt-96 bg-white shadow-lg rounded-lg h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Pesquisar</DialogTitle>
+            <DialogTitle>Pesquisar paciente</DialogTitle>
           </DialogHeader>
           <input
             type="text"
@@ -96,6 +121,25 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)} // Atualiza o estado com o valor digitado
           />
+          
+          {/* Tabela de resultados */}
+          <table className="bg-blue-500 w-full mt-4">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Nome</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredStudents.map((paciente) => (
+                <tr key={paciente.ID}>
+                  <td>{paciente.ID}</td>
+                  <td>{paciente.NOME}</td>                  
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <Button type="button" variant="default">
