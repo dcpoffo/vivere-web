@@ -40,7 +40,7 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
   // Filtra os alunos conforme o termo de busca
   useEffect(() => {
     setFilteredStudents(
-      students.filter((student) =>
+      students.filter((student: any) =>
         student.NOME.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
@@ -132,7 +132,7 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
               </tr>
             </thead>
             <tbody>
-              {filteredStudents.map((paciente) => (
+              {filteredStudents.map((paciente: any) => (
                 <tr key={paciente.ID} >
                   <td>{paciente.ID}</td>
                   <td>{paciente.NOME}</td>                  
