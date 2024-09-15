@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Header } from "@/components/header";
+import { Header } from "@/components/header/header";
 
 export default function LayoutClient({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();

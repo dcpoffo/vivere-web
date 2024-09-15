@@ -1,17 +1,18 @@
 'use client';
 
-import { SidebarButton } from './sidebar-button';
+
 import { SidebarItems } from '@/types';
 import Link from 'next/link';
-import { Separator } from './ui/separator';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Button } from './ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Separator } from '../ui/separator';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Button } from '../ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { LogOut, MoreHorizontal, Settings, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 import { usePathname } from 'next/navigation';
 import { pacientes_id_nome } from '@/app/utils/pacientes_id_nome';
+import { SidebarButton } from './sidebar-button';
 
 interface SidebarDesktopProps {
   sidebarItems: SidebarItems;
@@ -110,7 +111,7 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
 
       {/* Modal de Pesquisa */}
       <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
-        <DialogContent className="fixed inset-0 z-50 w-full max-w-lg mx-auto mt-96 bg-white shadow-lg rounded-lg h-[80vh] overflow-y-auto">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Pesquisar paciente</DialogTitle>
           </DialogHeader>
@@ -132,7 +133,7 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
             </thead>
             <tbody>
               {filteredStudents.map((paciente) => (
-                <tr key={paciente.ID}>
+                <tr key={paciente.ID} >
                   <td>{paciente.ID}</td>
                   <td>{paciente.NOME}</td>                  
                 </tr>
