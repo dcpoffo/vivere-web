@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { Header } from "@/components/header/header";
 import { Sidebar } from "@/components/sidebar/sidebar";
+import { AuthProvider } from "../../providers/auth-provider";
 
 const inter = Inter({ subsets: [ "latin" ] });
 
@@ -18,14 +19,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-br" className="light">
-      <body className={inter.className}>
-        <Sidebar />
-        {/* <Header /> */}
-        <main className="mx-5 mt-16 sm:ml-[300px] sm:mt-3">
-          {children}
-        </main>
-      </body>
-    </html>
+    <AuthProvider>
+
+      <html lang="pt-br" className="light">
+        <body className={inter.className}>
+          {/* <Sidebar /> */}
+          {/* <Header /> */}
+          {/* abaixo, com margem na esquerda para a sidebar */}
+          {/* <main className="mx-5 mt-16 sm:ml-[300px] sm:mt-3"> */}
+          <main>
+            <Header />
+            <div className="flex justify-center items-center"> {children} </div>
+          </main>
+        </body>
+      </html>
+
+    </AuthProvider>
   );
 }
