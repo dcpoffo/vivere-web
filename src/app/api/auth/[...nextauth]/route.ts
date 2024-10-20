@@ -3,6 +3,10 @@ import { NextAuthOptions } from "next-auth"
 import CredentialProvider from "next-auth/providers/credentials"
 
 const authOptions: NextAuthOptions = {
+  pages: {
+    signIn: "/login",
+    signOut: "/login",
+  },
   providers: [
     CredentialProvider({
       name: 'Credentials',
@@ -32,7 +36,7 @@ const authOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
-    jwt: ({ token, user}) => {
+    jwt: ({ token, user }) => {
       const customUser = user as unknown as any
 
       if (user) {
@@ -44,8 +48,8 @@ const authOptions: NextAuthOptions = {
 
       return token
     },
-    
-    session: async ({session, token}) => {
+
+    session: async ({ session, token }) => {
       return {
         ...session,
         user: {

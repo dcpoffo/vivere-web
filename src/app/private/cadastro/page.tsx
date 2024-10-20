@@ -1,6 +1,6 @@
 "use client"
+import { pacientes } from '@/app/utils/pacientes';
 import { useEffect, useState } from 'react';
-import { pacientes } from '../utils/pacientes';
 
 // const pacientes = [
 //     {
@@ -275,8 +275,9 @@ export default function Pacientes() {
     // }
 
     return (
-        <div>
-            <h1 className="text-2xl font-bold mb-4">Cadastro Principal</h1>
+        // <div className='bg-slate-500 text-slate-900 w-full h-screen flex justify-center items-center'>
+        <div className='mt-10'>
+            <h1 className="text-2xl font-bold mb-4 mt-10">Cadastro Principal</h1>
             <table className="table-auto">
                 <thead>
                     <tr>
