@@ -5,6 +5,7 @@ import "./globals.css";
 import { Header } from "@/components/header/header";
 import { Sidebar } from "@/components/sidebar/sidebar";
 import { AuthProvider } from "../../providers/auth-provider";
+import LoginPage from "./login/page";
 
 const inter = Inter({ subsets: [ "latin" ] });
 

@@ -28,7 +28,7 @@ const LoginForm = () => {
             if (!response?.error) {
                 const session = await getSession(); // Verifica se a sessão foi criada
                 if (session) {
-                    router.push("/private"); // Redireciona apenas se a sessão existir
+                    router.push("/"); // Redireciona apenas se a sessão existir
                 } else {
                     setError("Não foi possível verificar a sessão.");
                 }

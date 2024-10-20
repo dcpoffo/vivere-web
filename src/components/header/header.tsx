@@ -13,7 +13,7 @@ export function Header() {
             <nav className='w-full flex items-center justify-between m-auto max-w-screen-xl'>
                 {/* <Link href="/">Logo</Link> */}
                 <ul className='flex items-center gap-5 font-semibold'>
-                    <li><Link href="/">Início</Link></li>
+                    {session && <li><Link href="/">Início</Link></li>}
                     {session && (
                         <>
                             <li className="relative">
