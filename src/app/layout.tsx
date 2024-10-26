@@ -2,11 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import { Header } from "@/components/header/header";
-import { Sidebar } from "@/components/sidebar/sidebar";
 import { AuthProvider } from "../../providers/auth-provider";
-import LoginPage from "./login/page";
-import Footer from "@/components/footer/footer";
+import LayoutContent from "./LayoutContent"; // Novo arquivo que cuidará do layout e da sessão
 
 const inter = Inter({ subsets: [ "latin" ] });
 
@@ -17,28 +14,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <AuthProvider>
-
       <html lang="pt-br" className="light">
         <body className={inter.className}>
-          {/* <Sidebar /> */}
-          {/* <Header /> */}
-          {/* abaixo, com margem na esquerda para a sidebar */}
-          {/* <main className="mx-5 mt-16 sm:ml-[300px] sm:mt-3"> */}
-          <main className="min-h-screen flex flex-col">
-            <Header />
-            <div className="flex-grow overflow-auto flex justify-center items-center">
-              {children}
-            </div>
-            {/* <Footer /> */}
-          </main>
+          <LayoutContent>{children}</LayoutContent>
         </body>
       </html>
-
     </AuthProvider>
   );
 }

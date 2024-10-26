@@ -16,8 +16,10 @@ const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         //buscar o email do usuario na api
+        //const url = 'https://vivere-web.vercel.app/usuario?email='
+        const url = 'http://localhost:3333/usuario?email='
 
-        const response = await fetch(`http://localhost:3333/usuario?email=${credentials?.email}`, {
+        const response = await fetch(`${url}${credentials?.email}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -78,9 +80,20 @@ const authOptions: NextAuthOptions = {
         }
       }
     }
-  }
+  },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        session: undefined, // O cookie é removido ao fechar o navegador
+      },
+    },
+  },
 }
 
 const handler = NextAuth(authOptions)
 
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST, authOptions }

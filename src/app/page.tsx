@@ -15,7 +15,7 @@ export default function Home() {
   }, [ session, router ]);
 
   return (
-    <div className='bg-slate-500 w-full h-screen flex flex-col justify-center items-center font-semibold'>
+    <div className='bg-slate-300 w-full h-screen flex flex-col justify-center items-center font-semibold'>
       <h1>Página Inicial</h1>
       {session && session.user ? (
         <>

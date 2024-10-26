@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Button } from "../ui/button";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { getSession } from "next-auth/react";
 
@@ -12,6 +12,18 @@ const LoginForm = () => {
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
     const [ error, setError ] = useState("");
+
+    useEffect(() => {
+        const checkSessionAndSignOut = async () => {
+            const session = await getSession();
+            if (session) {
+                // Se uma sessão estiver ativa, faz o logout para limpar o token
+                await signOut({ redirect: false });
+            }
+        };
+
+        checkSessionAndSignOut();
+    }, []);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
