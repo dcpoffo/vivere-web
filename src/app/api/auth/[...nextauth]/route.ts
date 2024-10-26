@@ -16,22 +16,41 @@ const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         //buscar o email do usuario na api
-        const user = {
-          id: '1',
-          email: 'dcpoffo@gmail.com', //credentials.email
-          password: '123',
-          name: 'Darlan Radamés Conte Poffo',
-          role: 'admin'
+
+        const response = await fetch(`http://localhost:3333/usuario?email=${credentials?.email}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`${credentials?.email} não encontrado`);
         }
 
-        const isValidEmail = user.email === credentials?.email
-        const isValidPassword = user.password === credentials?.password
+        const usuario = await response.json();
 
-        if (!isValidEmail || !isValidPassword) {
+        console.log(usuario)
+
+        const isValidPassword = usuario.password === credentials?.password
+
+        if (!isValidPassword) {
           return null
         }
 
-        return user
+        // const user = {
+        //   id: '1',
+        //   email: 'dcpoffo@gmail.com', //credentials.email
+        //   password: '123',
+        //   name: 'Darlan Radamés Conte Poffo',
+        //   role: 'admin'
+        // }
+
+        //const isValidEmail = user.email === credentials?.email
+
+        // if (!isValidEmail || !isValidPassword) {
+
+        return usuario
       }
     })
   ],

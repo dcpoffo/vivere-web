@@ -6,6 +6,7 @@ import { Header } from "@/components/header/header";
 import { Sidebar } from "@/components/sidebar/sidebar";
 import { AuthProvider } from "../../providers/auth-provider";
 import LoginPage from "./login/page";
+import Footer from "@/components/footer/footer";
 
 const inter = Inter({ subsets: [ "latin" ] });
 
@@ -28,9 +29,12 @@ export default function RootLayout({
           {/* <Header /> */}
           {/* abaixo, com margem na esquerda para a sidebar */}
           {/* <main className="mx-5 mt-16 sm:ml-[300px] sm:mt-3"> */}
-          <main>
+          <main className="min-h-screen flex flex-col">
             <Header />
-            <div className="flex justify-center items-center"> {children} </div>
+            <div className="flex-grow overflow-auto flex justify-center items-center">
+              {children}
+            </div>
+            {/* <Footer /> */}
           </main>
         </body>
       </html>
