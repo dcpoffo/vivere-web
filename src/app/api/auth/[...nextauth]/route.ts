@@ -40,18 +40,6 @@ const authOptions: NextAuthOptions = {
           return null
         }
 
-        // const user = {
-        //   id: '1',
-        //   email: 'dcpoffo@gmail.com', //credentials.email
-        //   password: '123',
-        //   name: 'Darlan Radamés Conte Poffo',
-        //   role: 'admin'
-        // }
-
-        //const isValidEmail = user.email === credentials?.email
-
-        // if (!isValidEmail || !isValidPassword) {
-
         return usuario
       }
     })
@@ -96,4 +84,4 @@ const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions)
 
-export { handler as GET, handler as POST, authOptions }
+export { handler as GET, handler as POST }
