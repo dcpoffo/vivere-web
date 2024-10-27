@@ -60,30 +60,31 @@ const LoginForm = () => {
                 className="p-10 border border-blue-500 rounded-lg w-96"
             >
                 <h1 className="text-3xl font-bold mb-4">Login</h1>
-                <p className="text-sm text-slate-700 mb-10">Faça login para continuar</p>
+                <p className="text-lg text-slate-700 mb-10">Faça login para continuar</p>
                 <div className="flex flex-col">
                     <div className="flex flex-col gap-1 mb-6">
                         <label htmlFor="email">E-mail</label>
                         <input
+                            placeholder="email@email.com"
                             type="text"
                             name="email"
                             onChange={(e) => setEmail(e.target.value)}
-                            className="border rounded w-full p-3"
+                            className="border rounded-sm w-full p-3 bg-slate-200"
                         />
                     </div>
 
                     <div className="flex flex-col gap-1 mb-6">
                         <label htmlFor="email">Senha</label>
                         <input
-                            type="text"
+                            type="password"
                             name="password"
                             onChange={(e) => setPassword(e.target.value)}
-                            className="border rounded w-full p-3"
+                            className="border rounded-sm w-full p-3 bg-slate-200"
                         />
                     </div>
-                    {error && <span className="text-red-400 text-sm font-bold block mt-2">{error}</span>}
+                    {error && <span className="text-red-500 text-sm font-bold block mt-2">{error}</span>}
                     <Button
-                        className="mt-4 rounded h-12"
+                        className="mt-4 rounded-sm h-12 text-lg"
                         type="submit"
                     >
                         Entrar

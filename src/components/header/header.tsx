@@ -9,7 +9,7 @@ export function Header() {
     const { data: session } = useSession(); // Usa `useSession` no client-side
 
     return (
-        <header className="fixed w-full h-20 flex items-center bg-slate-400 text-slate-900">
+        <header className="fixed w-full h-14 flex items-center bg-slate-400 text-slate-900">
             <nav className="w-full flex items-center justify-between m-auto max-w-screen-xl">
                 <ul className="flex items-center gap-5 font-semibold">
                     {session && (
@@ -18,7 +18,7 @@ export function Header() {
                                 <Link href="/">Início</Link>
                             </li>
                             <li className="relative">
-                                <Link href="/private/cadastro">Cadastro</Link>
+                                <Link href="/private/pacientes">Pacientes</Link>
                                 <span className="absolute right-[-10px]">|</span>
                             </li>
                             <li className="relative">

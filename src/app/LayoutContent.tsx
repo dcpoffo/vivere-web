@@ -12,7 +12,7 @@ export default function LayoutContent({
     const { data: session } = useSession(); // Obtém a sessão client-side
 
     return (
-        <main className="min-h-screen flex flex-col">
+        <main className="min-h-screen flex flex-col bg-slate-300">
             {session && <Header />} {/* Exibe o Header se a sessão existir */}
             <div className="flex-grow overflow-auto flex justify-center items-center">
                 {children}
