@@ -13,7 +13,7 @@ export default function LayoutContent({
 
     return (
         <main className="min-h-screen flex flex-col bg-slate-300">
-            {session && <Header />} {/* Exibe o Header se a sessão existir */}
+            {/* {session && <Header />} Exibe o Header se a sessão existir */}
             <div className="flex-grow overflow-auto flex justify-center items-center">
                 {children}
             </div>

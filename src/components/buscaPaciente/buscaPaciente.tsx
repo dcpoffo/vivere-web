@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogOverlay, DialogContent, DialogTitle } from '../ui/dialog';
+import { useAPI } from '@/service/API';
+import { Paciente } from '@/types/Paciente';
 
-const BuscaPaciente = ({ onPacienteSelecionado }) => {
+interface BuscaPacienteProps {
+    onPacienteSelecionado: (paciente: Paciente) => void;
+}
+
+const BuscaPaciente: React.FC<BuscaPacienteProps> = ({ onPacienteSelecionado }) => {
     const [ open, setOpen ] = useState(false);
-    const [ pacientes, setPacientes ] = useState([]);
+    const [ pacientes, setPacientes ] = useState<Paciente[]>([]); // Definindo explicitamente o tipo como Paciente[]
     const [ search, setSearch ] = useState('');
-    const [ filteredPacientes, setFilteredPacientes ] = useState([]);
+    const [ filteredPacientes, setFilteredPacientes ] = useState<Paciente[]>([]); // Definindo explicitamente o tipo como Paciente[]
+
+    const api = useAPI();
 
     useEffect(() => {
         if (Array.isArray(pacientes)) {
             if (search) {
                 setFilteredPacientes(
-                    pacientes.filter(paciente =>
+                    pacientes.filter((paciente: Paciente) =>
                         paciente.nome.toLowerCase().includes(search.toLowerCase())
                     )
                 );
@@ -23,8 +31,9 @@ const BuscaPaciente = ({ onPacienteSelecionado }) => {
 
     const fetchPacientes = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:3333/pacientes');
-            const data = await response.json();
+            //const result = await api.get("/produtos");
+            const response = await api.get('/pacientes');
+            const data: Paciente[] = response.data; // Especificando que o data é um array de Pacientes
             setPacientes(data);
         } catch (error) {
             console.error('Erro ao buscar pacientes:', error);
@@ -36,14 +45,14 @@ const BuscaPaciente = ({ onPacienteSelecionado }) => {
         fetchPacientes();
     };
 
-    const handleSelectPaciente = (paciente: any) => {
+    const handleSelectPaciente = (paciente: Paciente) => {
         onPacienteSelecionado(paciente);
         setOpen(false); // Fecha o diálogo após a seleção
     };
 
     return (
         <div>
-            <button className='mt-4 rounded-lg bg-slate-500 text-white px-4 py-2 hover:bg-slate-600' onClick={handleOpen}>
+            <button className='mt-4 rounded-lg bg-slate-500 text-white px-4 py-2 hover:bg-slate-600 mb-4' onClick={handleOpen}>
                 Selecionar paciente
             </button>
 
@@ -59,7 +68,7 @@ const BuscaPaciente = ({ onPacienteSelecionado }) => {
                         className='mt-2 p-2 border rounded w-full'
                     />
                     <ul className='mt-4 max-h-60 overflow-y-auto'>
-                        {filteredPacientes.map(paciente => (
+                        {filteredPacientes.map((paciente: Paciente) => (
                             <li
                                 key={paciente.id}
                                 className='p-2 border-b text-slate-900 cursor-pointer'

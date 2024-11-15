@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { AuthProvider } from "../../providers/auth-provider";
 import LayoutContent from "./LayoutContent"; // Novo arquivo que cuidará do layout e da sessão
+import { PacienteProvider } from "@/context/PacienteContext";
 
 const inter = Inter({ subsets: [ "latin" ] });
 
@@ -19,11 +20,17 @@ export default function RootLayout({
 }) {
   return (
     <AuthProvider>
-      <html lang="pt-br" className="light">
-        <body className={inter.className}>
-          <LayoutContent>{children}</LayoutContent>
-        </body>
-      </html>
+
+      <PacienteProvider>
+
+        <html lang="pt-br" className="light">
+          <body className={inter.className}>
+            <LayoutContent>{children}</LayoutContent>
+          </body>
+        </html>
+
+      </PacienteProvider>
+
     </AuthProvider>
   );
 }

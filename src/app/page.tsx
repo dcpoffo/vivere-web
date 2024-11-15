@@ -3,37 +3,36 @@
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { LoginForm } from '@/components/login/form-login';
+import { SignOutButton } from '@/components/signOutButton';
+import Link from 'next/link';
 
 export default function Home() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!session) {
-      router.push('/login');
-    }
-  }, [ session, router ]);
+  // useEffect(() => {
+  //   if (!session) {
+  //     router.push('/login');
+  //   }
+  // }, [ session, router ]);
 
   return (
     <div className='w-full h-screen flex flex-col justify-center items-center font-semibold'>
-      <h1>Página Inicial</h1>
       {session && session.user ? (
         <>
-          <p>Bem-vindo(a) {session.user.name}!</p>
+          <p>Olá {session.user.name}!</p>
+          <SignOutButton />
+
+          <button className='mt-4 rounded-lg bg-slate-500 text-white px-4 py-2 hover:bg-slate-600 mb-4'>
+            <Link href="/private/pacientes">Pacientes</Link>
+          </button>
           <pre className="bg-slate-900 text-slate-50 p-10 rounded-lg mt-10">{JSON.stringify(session, null, 2)}</pre>
         </>
       ) : (
-        <p>Você não está autenticado.</p>
+        <LoginForm />
+        // <p>Você não está autenticado.</p>
       )}
     </div>
   );
 }
-
-
-// export default function Home() {
-//   return (
-//     <div className='bg-slate-500 text-slate-900 w-full h-screen flex justify-center items-center font-semibold'>
-//       <h1>Home Page</h1>
-//     </div>
-//   );
-// }

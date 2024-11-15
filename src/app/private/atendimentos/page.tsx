@@ -1,7 +1,12 @@
-export default function Avaliacoes() {
+"use client";
+
+import TabsPaciente from "@/components/tabs/layout";
+
+
+export default function Atendimentos() {
     return (
-        <div className='bg-slate-300 text-slate-900 w-full h-screen flex justify-center items-center'>
-            <h1>Atendimentos</h1>
+        <div className="flex justify-start w-full">
+            <TabsPaciente />
         </div>
-    )
+    );
 }
