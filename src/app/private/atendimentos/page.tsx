@@ -1,12 +1,74 @@
 "use client";
 
 import TabsPaciente from "@/components/tabs/layout";
+import { usePacienteContext } from "@/context/PacienteContext";
+import { useAPI } from "@/service/API";
+import { useEffect, useState } from "react";
 
+// Cache local fora do ciclo de vida do React
+const atendimentosCache = {};
 
 export default function Atendimentos() {
+    const api = useAPI();
+    const { pacienteSelecionado } = usePacienteContext();
+
+    const [ atendimentos, setAtendimentos ] = useState(null); // Dados carregados
+    const [ loading, setLoading ] = useState(false); // Estado de carregamento
+
+    useEffect(() => {
+        if (pacienteSelecionado?.id) {
+            // Verifica se o paciente já está no cache
+            if (atendimentosCache[ pacienteSelecionado.id ]) {
+                console.log("Usando cache para atendimentos:", pacienteSelecionado.id);
+                setAtendimentos(atendimentosCache[ pacienteSelecionado.id ]);
+            } else {
+                fetchAtendimentos();
+            }
+        }
+    }, [ pacienteSelecionado?.id ]);
+
+    const fetchAtendimentos = async () => {
+        setLoading(true);
+        try {
+            console.log("Buscando atendimentos na API...");
+            const response = await api.get(`/atendimento?idPaciente=${pacienteSelecionado?.id}`);
+            const data = response.data;
+            atendimentosCache[ pacienteSelecionado.id ] = data; // Atualiza o cache
+            setAtendimentos(data);
+            console.log(data);
+        } catch (error) {
+            console.error("Erro ao buscar atendimentos: ", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAtualizar = () => {
+        // Invalida o cache e força a atualização
+        if (pacienteSelecionado?.id) {
+            delete atendimentosCache[ pacienteSelecionado.id ];
+            fetchAtendimentos();
+        }
+    };
+
     return (
-        <div className="flex justify-start w-full">
+        <div className="flex flex-col justify-start items-center w-full">
             <TabsPaciente />
+            <button
+                onClick={handleAtualizar}
+                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+            >
+                Atualizar Atendimentos
+            </button>
+            {loading && <p>Carregando atendimentos...</p>}
+
+            {!loading && atendimentos && (
+                <div className="flex flex-col justify-center w-full">
+                    <h2>Atendimentos do paciente:</h2>
+                    <pre>{JSON.stringify(atendimentos, null, 2)}</pre>
+                </div>
+            )}
+
         </div>
     );
 }

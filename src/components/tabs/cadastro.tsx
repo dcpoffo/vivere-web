@@ -1,10 +1,11 @@
 import React from 'react';
 import { Button } from '../ui/button';
+import { Paciente } from '@/types/Paciente';
 
 interface CadastroTabProps {
-    dadosPaciente: any; // substitua `any` pelo tipo correto
+    dadosPaciente: Paciente | null;
     editando: boolean;
-    handleSalvar: (event: React.FormEvent) => void;
+    handleSalvar: (event: React.FormEvent<HTMLFormElement>) => void; // Tipo correto
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     handleAlterar: () => void;
     handleCancelar: () => void;
@@ -29,7 +30,7 @@ const CadastroTab: React.FC<CadastroTabProps> = ({
                         <input
                             type="text"
                             name="id"
-                            value={dadosPaciente.id || ''}
+                            value={dadosPaciente!.id || ''}
                             disabled
                             className="w-full border p-2" />
                     </label>
@@ -38,7 +39,7 @@ const CadastroTab: React.FC<CadastroTabProps> = ({
                         <input
                             type="text"
                             name="nome"
-                            value={dadosPaciente.nome || ''}
+                            value={dadosPaciente!.nome || ''}
                             onChange={handleChange}
                             disabled={!editando}
                             className="w-full border p-2" />
@@ -50,7 +51,7 @@ const CadastroTab: React.FC<CadastroTabProps> = ({
                         <input
                             type="text"
                             name="situacao"
-                            value={dadosPaciente.situacao || ''}
+                            value={dadosPaciente!.situacao || ''}
                             onChange={handleChange}
                             disabled={!editando}
                             className="w-full border p-2" />
@@ -60,7 +61,7 @@ const CadastroTab: React.FC<CadastroTabProps> = ({
                         <input
                             type="text"
                             name="cpf"
-                            value={dadosPaciente.cpf || ''}
+                            value={dadosPaciente!.cpf || ''}
                             onChange={handleChange}
                             disabled={!editando}
                             className="w-full border p-2" />
@@ -72,7 +73,7 @@ const CadastroTab: React.FC<CadastroTabProps> = ({
                         <input
                             type="text"
                             name="contato1"
-                            value={dadosPaciente.contato1 || ''}
+                            value={dadosPaciente!.contato1 || ''}
                             onChange={handleChange}
                             disabled={!editando}
                             className="w-full border p-2" />
@@ -82,7 +83,7 @@ const CadastroTab: React.FC<CadastroTabProps> = ({
                         <input
                             type="text"
                             name="contato2"
-                            value={dadosPaciente.contato2 || ''}
+                            value={dadosPaciente!.contato2 || ''}
                             onChange={handleChange}
                             disabled={!editando}
                             className="w-full border p-2" />
@@ -94,7 +95,7 @@ const CadastroTab: React.FC<CadastroTabProps> = ({
                         <input
                             type="date"
                             name="dataNascimento"
-                            value={dadosPaciente.dataNascimento ? dadosPaciente.dataNascimento.split('T')[ 0 ] : ''}
+                            value={dadosPaciente!.dataNascimento ? dadosPaciente!.dataNascimento.split('T')[ 0 ] : ''}
                             onChange={handleChange}
                             disabled={!editando}
                             className="w-40 border p-2" />
@@ -106,7 +107,7 @@ const CadastroTab: React.FC<CadastroTabProps> = ({
                         <input
                             type="text"
                             name="endereco"
-                            value={dadosPaciente.endereco || ''}
+                            value={dadosPaciente!.endereco || ''}
                             onChange={handleChange}
                             disabled={!editando}
                             className="w-full border p-2" />
@@ -118,7 +119,7 @@ const CadastroTab: React.FC<CadastroTabProps> = ({
                         <input
                             type="email"
                             name="email"
-                            value={dadosPaciente.email || ''}
+                            value={dadosPaciente!.email || ''}
                             onChange={handleChange}
                             disabled={!editando}
                             className="w-full border p-2" />
@@ -130,7 +131,7 @@ const CadastroTab: React.FC<CadastroTabProps> = ({
                         <input
                             type="text"
                             name="profissao"
-                            value={dadosPaciente.profissao || ''}
+                            value={dadosPaciente!.profissao || ''}
                             onChange={handleChange}
                             disabled={!editando}
                             className="w-full border p-2" />

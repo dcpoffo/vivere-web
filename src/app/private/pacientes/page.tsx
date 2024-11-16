@@ -78,7 +78,7 @@ export default function Pacientes() {
     };
 
     return (
-        <div className='flex justify-start w-full'>
+        <div className='flex justify-center items-center w-full '>
             <Tabs defaultValue="cadastro" onValueChange={handleTabChange}>
                 {dadosPaciente && ( // Renderiza o TabsList apenas se um paciente estiver selecionado
                     <div className='flex justify-start w-full'>

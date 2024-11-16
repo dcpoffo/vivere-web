@@ -36,7 +36,7 @@ const BuscaPaciente: React.FC<BuscaPacienteProps> = ({ onPacienteSelecionado }) 
             const data: Paciente[] = response.data; // Especificando que o data é um array de Pacientes
             setPacientes(data);
         } catch (error) {
-            console.error('Erro ao buscar pacientes:', error);
+            console.error('Erro ao buscar pacientes: ', error);
         }
     };
 
