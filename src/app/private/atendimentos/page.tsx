@@ -16,24 +16,13 @@ export default function Atendimentos() {
     const [ atendimentos, setAtendimentos ] = useState<AtendimentosData[]>([]); // Dados carregados
     const [ loading, setLoading ] = useState(false); // Estado de carregamento
 
-    useEffect(() => {
-        if (pacienteSelecionado?.id) {
-            // Verifica se o paciente já está no cache
-            if (atendimentosCache[ pacienteSelecionado.id ]) {
-                console.log("Usando cache para atendimentos:", pacienteSelecionado.id);
-                setAtendimentos(atendimentosCache[ pacienteSelecionado.id ]);
-            } else {
-                fetchAtendimentos();
-            }
-        }
-    }, [ pacienteSelecionado?.id ]);
+    const fetchAtendimentos = useCallback(async () => {
+        if (!pacienteSelecionado) return;
 
-
-    const fetchAtendimentos = async () => {
         setLoading(true);
         try {
             console.log("Buscando atendimentos na API...");
-            const response = await api.get(`/atendimento?idPaciente=${pacienteSelecionado?.id}`);
+            const response = await api.get(`/atendimento?idPaciente=${pacienteSelecionado.id}`);
             const data = response.data;
             atendimentosCache[ pacienteSelecionado.id ] = data; // Atualiza o cache
             setAtendimentos(data);
@@ -43,7 +32,18 @@ export default function Atendimentos() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [ api, pacienteSelecionado ]);
+
+    useEffect(() => {
+        if (pacienteSelecionado?.id) {
+            if (atendimentosCache[ pacienteSelecionado.id ]) {
+                console.log("Usando cache para atendimentos:", pacienteSelecionado.id);
+                setAtendimentos(atendimentosCache[ pacienteSelecionado.id ]);
+            } else {
+                fetchAtendimentos();
+            }
+        }
+    }, [ pacienteSelecionado, fetchAtendimentos ]);
 
     const handleAtualizar = () => {
         // Invalida o cache e força a atualização
@@ -75,3 +75,34 @@ export default function Atendimentos() {
         </div>
     );
 }
+
+// useEffect(() => {
+//     if (pacienteSelecionado?.id) {
+//         // Verifica se o paciente já está no cache
+//         if (atendimentosCache[ pacienteSelecionado.id ]) {
+//             console.log("Usando cache para atendimentos:", pacienteSelecionado.id);
+//             setAtendimentos(atendimentosCache[ pacienteSelecionado.id ]);
+//         } else {
+//             fetchAtendimentos();
+//         }
+//     }
+// }, [ pacienteSelecionado?.id ]);
+
+
+// const fetchAtendimentos = async () => {
+//     if (!pacienteSelecionado) return;
+
+//     setLoading(true);
+//     try {
+//         console.log("Buscando atendimentos na API...");
+//         const response = await api.get(`/atendimento?idPaciente=${pacienteSelecionado?.id}`);
+//         const data = response.data;
+//         atendimentosCache[ pacienteSelecionado.id ] = data; // Atualiza o cache
+//         setAtendimentos(data);
+//         console.log(data);
+//     } catch (error) {
+//         console.error("Erro ao buscar atendimentos: ", error);
+//     } finally {
+//         setLoading(false);
+//     }
+// };
