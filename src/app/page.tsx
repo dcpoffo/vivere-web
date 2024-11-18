@@ -11,12 +11,6 @@ export default function Home() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (!session) {
-  //     router.push('/login');
-  //   }
-  // }, [ session, router ]);
-
   return (
     <div className='w-full h-screen flex flex-col justify-center items-center font-semibold'>
       {session && session.user ? (
@@ -35,4 +29,4 @@ export default function Home() {
       )}
     </div>
   );
-}
+} 

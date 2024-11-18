@@ -1,18 +1,19 @@
 "use client";
 
-import TabsPaciente from "@/components/tabs/layout";
+import { AtendimentosData, columns } from "@/app/datatable/atendimentos/columns";
+import { DataTable } from "@/components/ui/data-table";
 import { usePacienteContext } from "@/context/PacienteContext";
 import { useAPI } from "@/service/API";
 import { useEffect, useState } from "react";
 
 // Cache local fora do ciclo de vida do React
-const atendimentosCache = {};
+const atendimentosCache: Record<string, AtendimentosData[]> = {};
 
 export default function Atendimentos() {
     const api = useAPI();
     const { pacienteSelecionado } = usePacienteContext();
 
-    const [ atendimentos, setAtendimentos ] = useState(null); // Dados carregados
+    const [ atendimentos, setAtendimentos ] = useState<AtendimentosData[]>([]); // Dados carregados
     const [ loading, setLoading ] = useState(false); // Estado de carregamento
 
     useEffect(() => {
@@ -26,6 +27,7 @@ export default function Atendimentos() {
             }
         }
     }, [ pacienteSelecionado?.id ]);
+
 
     const fetchAtendimentos = async () => {
         setLoading(true);
@@ -53,7 +55,7 @@ export default function Atendimentos() {
 
     return (
         <div className="flex flex-col justify-start items-center w-full">
-            <TabsPaciente />
+            {/* <TabsPaciente /> */}
             <button
                 onClick={handleAtualizar}
                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
@@ -62,10 +64,11 @@ export default function Atendimentos() {
             </button>
             {loading && <p>Carregando atendimentos...</p>}
 
-            {!loading && atendimentos && (
-                <div className="flex flex-col justify-center w-full">
-                    <h2>Atendimentos do paciente:</h2>
-                    <pre>{JSON.stringify(atendimentos, null, 2)}</pre>
+            {!loading && atendimentos.length > 0 && (
+                <div className="flex flex-col justify-center w-full container mx-auto py-10">
+                    {/* <h2>Atendimentos do paciente:</h2> */}
+                    {/* <pre>{JSON.stringify(atendimentos, null, 2)}</pre> */}
+                    <DataTable columns={columns} data={atendimentos} />
                 </div>
             )}
 
