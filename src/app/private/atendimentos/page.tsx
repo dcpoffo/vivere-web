@@ -4,7 +4,7 @@ import { AtendimentosData, columns } from "@/app/datatable/atendimentos/columns"
 import { DataTable } from "@/components/ui/data-table";
 import { usePacienteContext } from "@/context/PacienteContext";
 import { useAPI } from "@/service/API";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 // Cache local fora do ciclo de vida do React
 const atendimentosCache: Record<string, AtendimentosData[]> = {};
