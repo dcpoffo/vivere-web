@@ -16,8 +16,8 @@ const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         //buscar o email do usuario na api
-        //const url = 'https://vivere-web.vercel.app/usuario?email='
-        const url = 'http://localhost:3333/usuario?email='
+        const url = 'https://vivere-web.vercel.app/usuario?email='
+        //const url = 'http://localhost:3333/usuario?email='
 
         const response = await fetch(`${url}${credentials?.email}`, {
           method: 'GET',
