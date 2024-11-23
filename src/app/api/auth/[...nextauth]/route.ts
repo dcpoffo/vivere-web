@@ -1,4 +1,3 @@
-import { useAPI } from "@/service/API";
 import NextAuth from "next-auth"
 import { NextAuthOptions } from "next-auth"
 import CredentialProvider from "next-auth/providers/credentials"
@@ -16,62 +15,33 @@ const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials) {
+        //buscar o email do usuario na api
+        const url = 'https://vivere-web-backend.vercel.app/usuario?email='
+        //const url = 'http://localhost:3333/usuario?email='
 
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const api = useAPI(); // Use o hook para obter as funções de API
+        const response = await fetch(`${url}${credentials?.email}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-        try {
-          // Faça a requisição usando `api.get`
-          const response = await api.get(`/usuario?email=${credentials?.email}`);
-
-          const usuario = response.data;
-
-          console.log(usuario);
-
-          // Validação de senha
-          const isValidPassword = usuario.password === credentials?.password;
-
-          if (!isValidPassword) {
-            return null;
-          }
-
-          return usuario;
-
-        } catch (error) {
-          console.error("Erro ao buscar usuário:", error);
+        if (!response.ok) {
           throw new Error(`${credentials?.email} não encontrado`);
         }
+
+        const usuario = await response.json();
+
+        console.log(usuario)
+
+        const isValidPassword = usuario.password === credentials?.password
+
+        if (!isValidPassword) {
+          return null
+        }
+
+        return usuario
       }
-
-      // ABAIXO COM FECTH  
-
-      //   //buscar o email do usuario na api
-      //   const url = 'https://vivere-web-backend.vercel.app/usuario?email='
-      //   //const url = 'http://localhost:3333/usuario?email='
-
-      //   const response = await fetch(`${url}${credentials?.email}`, {
-      //     method: 'GET',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //   });
-
-      //   if (!response.ok) {
-      //     throw new Error(`${credentials?.email} não encontrado`);
-      //   }
-
-      //   const usuario = await response.json();
-
-      //   console.log(usuario)
-
-      //   const isValidPassword = usuario.password === credentials?.password
-
-      //   if (!isValidPassword) {
-      //     return null
-      //   }
-
-      //   return usuario
-      // }
     })
   ],
   callbacks: {

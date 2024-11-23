@@ -232,6 +232,7 @@ export default function Pacientes() {
                 <div className="pt-10 bg-slate-300 text-slate-900 w-full h-screen flex flex-col justify-center items-center">
                     <p>Nenhum paciente selecionado</p>
                     <BuscaPaciente onPacienteSelecionado={handlePacienteSelecionado} />
+                    <SignOutButton />
                 </div>
             )}
         </div>
