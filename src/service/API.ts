@@ -4,7 +4,8 @@ import axios from 'axios'
 export const useAPI = () => {
 
   //const baseURL = "http://127.0.0.1:3333";
-  const baseURL = "https://vivere-web.vercel.app";
+  //vivere-web-backend.vercel.app
+  const baseURL = "https://vivere-web-backend.vercel.app";
 
   const get = (url: string) => {
     return axios.get(baseURL + url)
