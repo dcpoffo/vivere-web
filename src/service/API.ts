@@ -7,6 +7,8 @@ export const useAPI = () => {
   //vivere-web-backend.vercel.app
   const baseURL = "https://vivere-web-backend.vercel.app";
 
+  axios.defaults.withCredentials = true;
+
   const get = (url: string) => {
     return axios.get(baseURL + url)
   }
