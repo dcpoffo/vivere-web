@@ -97,6 +97,3 @@ const authOptions: NextAuthOptions = {
 const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }
-
-const session = await fetch('/api/auth/session');
-console.log('Session in production:', await session.json());
