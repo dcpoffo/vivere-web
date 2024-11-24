@@ -2,10 +2,13 @@ import NextAuth from "next-auth"
 import { NextAuthOptions } from "next-auth"
 import CredentialProvider from "next-auth/providers/credentials"
 
+const isProduction = process.env.NEXT_PUBLIC_ENV === "production";
+
 const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
     signOut: "/login",
+    error: "/login", // Redireciona erros para o login
   },
   providers: [
     CredentialProvider({
@@ -59,6 +62,9 @@ const authOptions: NextAuthOptions = {
     },
 
     session: async ({ session, token }) => {
+      console.log("[CALLBACK_SESSION]: Session:", session);
+      console.log("[CALLBACK_SESSION]: Token:", token);
+
       return {
         ...session,
         user: {
@@ -74,7 +80,13 @@ const authOptions: NextAuthOptions = {
       name: `next-auth.session-token`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
+        //sameSite: "lax",
+        sameSite: "None",
+        secure: isProduction,
+        //No seu ambiente de produção, você provavelmente está acessando o site via HTTPS, 
+        //o que exige a configuração do cookie com SameSite: "None" e Secure: true.
+        //Quando você usa SameSite: None, o cookie é enviado entre diferentes domínios(cross- site), 
+        //mas ele também precisa ser marcado como Secure para funcionar corretamente em ambientes HTTPS.
         path: "/",
         session: undefined, // O cookie é removido ao fechar o navegador
       },
@@ -85,3 +97,6 @@ const authOptions: NextAuthOptions = {
 const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }
+
+const session = await fetch('/api/auth/session');
+console.log('Session in production:', await session.json());
