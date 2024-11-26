@@ -20,6 +20,10 @@ export default function Pacientes() {
     const router = useRouter();
 
     useEffect(() => {
+        console.log("entrou na pagina de pacientes")
+    }, []);
+
+    useEffect(() => {
         setDadosPaciente(pacienteSelecionado);
         setDadosOriginais(pacienteSelecionado);
     }, [ pacienteSelecionado ]);
