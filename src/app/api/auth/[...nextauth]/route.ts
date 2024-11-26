@@ -25,9 +25,9 @@ const authOptions: NextAuthOptions = {
         const response = await fetch(`${url}${credentials?.email}`, {
           method: 'GET',
           credentials: "include",
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          // headers: {
+          //   'Content-Type': 'application/json',
+          // },
         });
 
         if (!response.ok) {

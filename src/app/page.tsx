@@ -24,10 +24,6 @@ export default function Home() {
             </Link>
           </button>
 
-          <Link href="/private/pacientes">
-            Pacientes
-          </Link>
-
           {/* <Link href="/private/pacientes">
             <a className="mt-4 rounded-lg bg-slate-500 text-white px-4 py-2 hover:bg-slate-600 mb-4">
               Pacientes sem botao
