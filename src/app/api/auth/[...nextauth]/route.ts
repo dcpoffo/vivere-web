@@ -50,17 +50,18 @@ const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     jwt: ({ token, user }) => {
-      const customUser = user as unknown as any;
+      const customUser = user as unknown as any
 
       if (user) {
         return {
           ...token,
-          role: customUser.role || "user", // Adicione um valor padrão
-        };
+          role: customUser.role
+        }
       }
 
-      return token;
+      return token
     },
+
     session: async ({ session, token }) => {
       console.log("[CALLBACK_SESSION]: Session:", session);
       console.log("[CALLBACK_SESSION]: Token:", token);
@@ -70,39 +71,11 @@ const authOptions: NextAuthOptions = {
         user: {
           name: token.name,
           email: token.email,
-          role: token.role || "user", // Adicione um valor padrão
-        },
-      };
-    },
+          role: token.role
+        }
+      }
+    }
   },
-  // callbacks: {
-  //   jwt: ({ token, user }) => {
-  //     const customUser = user as unknown as any
-
-  //     if (user) {
-  //       return {
-  //         ...token,
-  //         role: customUser.role
-  //       }
-  //     }
-
-  //     return token
-  //   },
-
-  //   session: async ({ session, token }) => {
-  //     console.log("[CALLBACK_SESSION]: Session:", session);
-  //     console.log("[CALLBACK_SESSION]: Token:", token);
-
-  //     return {
-  //       ...session,
-  //       user: {
-  //         name: token.name,
-  //         email: token.email,
-  //         role: token.role
-  //       }
-  //     }
-  //   }
-  // },
   cookies: {
     sessionToken: {
       name: `next-auth.session-token`,
