@@ -2,30 +2,31 @@ import { withAuth, NextRequestWithAuth, NextAuthMiddlewareOptions } from "next-a
 import { NextResponse } from "next/server";
 
 const middleware = (request: NextRequestWithAuth) => {
-
-    const isPrivateRoutes = request.nextUrl.pathname.startsWith("/private");
+    console.log("ENTRANDO NO middleware")
 
     if (!request.nextauth.token) {
+        console.log("Parece que não tem token!!!")
+
         return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    const isAdminUser = request.nextauth.token.role === "admin";
+    const isAdminUser = request.nextauth.token.role;
 
-    if (isPrivateRoutes && !isAdminUser) {
+    if (!isAdminUser) {
         return NextResponse.rewrite(new URL("/denied", request.url));
     }
 
-    const token = request.nextauth.token;
+    // const token = request.nextauth.token;
 
-    if (!token) {
-        return NextResponse.redirect(new URL("/login", request.url));
-    }
+    // if (!token) {
+    //     return NextResponse.redirect(new URL("/login", request.url));
+    // }
 
     console.log('--- MIDDLEWARE LOG ---');
     console.log('Método:', request.method);
     console.log('URL:', request.url);
     console.log('Cabeçalhos:', [ ...request.headers ]);
-
+    console.log("Token: ", request.nextauth.token)
 
     return NextResponse.next();
 };
@@ -39,6 +40,7 @@ const callbackOptions: NextAuthMiddlewareOptions = {
     callbacks: {
         authorized: ({ token }) => {
             // Permitir acesso somente se o token existir
+            console.log("entrou no callbacks")
             return !!token;
         },
     },
