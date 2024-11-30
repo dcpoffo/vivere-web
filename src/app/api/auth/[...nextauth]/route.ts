@@ -25,9 +25,9 @@ const authOptions: NextAuthOptions = {
         const response = await fetch(`${url}${credentials?.email}`, {
           method: 'GET',
           credentials: "include",
-          // headers: {
-          //   'Content-Type': 'application/json',
-          // },
+          headers: {
+            'Content-Type': 'application/json',
+          },
         });
 
         if (!response.ok) {
@@ -79,11 +79,12 @@ const authOptions: NextAuthOptions = {
   cookies: {
     sessionToken: {
       name: `next-auth.session-token`,
+      // name: `__Secure-next-auth.session-token`,
       options: {
         httpOnly: true,
         //sameSite: "lax",
-        sameSite: "None",
-        secure: isProduction,
+        sameSite: "none",
+        secure: true,
         //No seu ambiente de produção, você provavelmente está acessando o site via HTTPS, 
         //o que exige a configuração do cookie com SameSite: "None" e Secure: true.
         //Quando você usa SameSite: None, o cookie é enviado entre diferentes domínios(cross- site), 
