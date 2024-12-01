@@ -2,22 +2,52 @@ import { withAuth, NextRequestWithAuth, NextAuthMiddlewareOptions } from "next-a
 import { NextResponse } from "next/server";
 
 const middleware = (request: NextRequestWithAuth) => {
-    console.log("Middleware executado, mas sem restrições.");
-    console.log("--- LOGS ---");
-    console.log("Método:", request.method);
-    console.log("URL:", request.url);
+    console.log("ENTRANDO NO middleware")
 
-    return NextResponse.next(); // Sempre permite o acesso
+    // if (!request.nextauth.token) {
+    //     console.log("Parece que não tem token!!!")
+
+    //     return NextResponse.redirect(new URL("/login", request.url));
+    // }
+
+    const token = request.nextauth.token || {};
+    const isAdminUser = token.role === 'admin';
+
+    if (!isAdminUser) {
+        return NextResponse.rewrite(new URL("/denied", request.url));
+    }
+
+
+    console.log('--- MIDDLEWARE LOG ---');
+    console.log('Método:', request.method);
+    console.log('URL:', request.url);
+    console.log('Cabeçalhos:', [ ...request.headers ]);
+    console.log("Token: ", request.nextauth.token)
+
+    return NextResponse.next();
 };
 
+
 const callbackOptions: NextAuthMiddlewareOptions = {
+    // Qualquer configuração adicional para o middleware
     pages: {
-        signIn: "/login", // Pode ser mantido para futuras configurações
+        signIn: "/login", // Redirecionar para /login caso o token seja inválido
+    },
+    callbacks: {
+        authorized: ({ token }) => {
+            // Permitir acesso somente se o token existir
+            console.log("entrou no callbacks")
+            return !!token;
+        },
     },
 };
 
+
 export default withAuth(middleware, callbackOptions);
 
+
+
 export const config = {
-    matcher: "/:path*", // Middleware executa para todas as rotas
+    matcher: "/private/:path*",
 };
+
