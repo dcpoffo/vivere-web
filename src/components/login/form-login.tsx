@@ -33,23 +33,21 @@ const LoginForm = () => {
                 redirect: false,
                 email,
                 password
-            })
+            });
 
-            console.log("[LOGIN_RESPONSE]: ", response)
-
-            if (!response?.error) {
-                const session = await getSession(); // Verifica se a sessão foi criada
+            if (response?.error) {
+                setError("E-mail ou senha inválidos");
+            } else {
+                // Verifica a sessão diretamente após o login
+                const session = await getSession();
                 if (session) {
-                    router.push("/"); // Redireciona apenas se a sessão existir
+                    router.push("/"); // Redireciona para a página inicial se a sessão for válida
                 } else {
                     setError("Não foi possível verificar a sessão.");
                 }
-            } else {
-                setError("E-mail ou senha inválidos");
             }
-
         } catch (error) {
-            console.log("[LOGIN ERROR]: ", error)
+            setError("Erro ao tentar fazer login.");
         }
     }
 
