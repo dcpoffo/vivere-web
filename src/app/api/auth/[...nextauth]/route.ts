@@ -7,8 +7,8 @@ const isProduction = process.env.NEXT_PUBLIC_ENV === "production";
 const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
-    signOut: "/login",
-    error: "/login", // Redireciona erros para o login
+    signOut: "/login"
+
   },
   providers: [
     CredentialProvider({
@@ -19,12 +19,14 @@ const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         //buscar o email do usuario na api
-        const url = 'https://vivere-web-backend.vercel.app/usuario?email='
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/usuario?email=`;
+
+        //const url = 'https://vivere-web-backend.vercel.app/usuario?email='
         //const url = 'http://localhost:3333/usuario?email='
 
         const response = await fetch(`${url}${credentials?.email}`, {
           method: 'GET',
-          credentials: "include",
+          //credentials: "include",
           headers: {
             'Content-Type': 'application/json',
           },
@@ -81,8 +83,8 @@ const authOptions: NextAuthOptions = {
       name: `next-auth.session-token`,
       options: {
         httpOnly: true,
-        //sameSite: "lax",
-        sameSite: "none",
+        sameSite: "lax",
+        //sameSite: "none",
         secure: true,
         //No seu ambiente de produção, você provavelmente está acessando o site via HTTPS, 
         //o que exige a configuração do cookie com SameSite: "None" e Secure: true.
