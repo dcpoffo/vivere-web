@@ -1,34 +1,25 @@
-import NextAuth from "next-auth"
-import { NextAuthOptions } from "next-auth"
-import CredentialProvider from "next-auth/providers/credentials"
-
-const isProduction = process.env.NEXT_PUBLIC_ENV === "production";
+import NextAuth from "next-auth";
+import { NextAuthOptions } from "next-auth";
+import CredentialProvider from "next-auth/providers/credentials";
 
 const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
-    signOut: "/login"
-
+    signOut: "/login",
   },
   providers: [
     CredentialProvider({
-      name: 'Credentials',
+      name: "Credentials",
       credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' }
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        //buscar o email do usuario na api
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/usuario?email=`;
-
-        //const url = 'https://vivere-web-backend.vercel.app/usuario?email='
-        //const url = 'http://localhost:3333/usuario?email='
-
-        const response = await fetch(`${url}${credentials?.email}`, {
-          method: 'GET',
-          //credentials: "include",
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/usuario?email=${credentials?.email}`;
+        const response = await fetch(url, {
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         });
 
@@ -38,45 +29,37 @@ const authOptions: NextAuthOptions = {
 
         const usuario = await response.json();
 
-        console.log(usuario)
-
-        const isValidPassword = usuario.password === credentials?.password
-
+        // Verifique se a senha é válida
+        const isValidPassword = usuario.password === credentials?.password; // Substitua por bcrypt se necessário
         if (!isValidPassword) {
-          return null
+          return null;
         }
 
-        return usuario
-      }
-    })
+        return usuario;
+      },
+    }),
   ],
   callbacks: {
     jwt: ({ token, user }) => {
-      const customUser = user as unknown as any
-
       if (user) {
+        const customUser = user as any;
         return {
           ...token,
-          role: customUser.role
-        }
+          role: customUser.role,
+        };
       }
-
-      return token
+      return token;
     },
-
     session: async ({ session, token }) => {
-      console.log("[CALLBACK_SESSION]: Session:", session);
-      console.log("[CALLBACK_SESSION]: Token:", token);
-
       return {
         ...session,
         user: {
           name: token.name,
           email: token.email,
-          role: token.role
-        }
-      }
-    }
+          role: token.role,
+        },
+      };
+    },
   },
   cookies: {
     sessionToken: {
@@ -84,19 +67,13 @@ const authOptions: NextAuthOptions = {
       options: {
         httpOnly: true,
         sameSite: "lax",
-        //sameSite: "none",
         secure: true,
-        //No seu ambiente de produção, você provavelmente está acessando o site via HTTPS, 
-        //o que exige a configuração do cookie com SameSite: "None" e Secure: true.
-        //Quando você usa SameSite: None, o cookie é enviado entre diferentes domínios(cross- site), 
-        //mas ele também precisa ser marcado como Secure para funcionar corretamente em ambientes HTTPS.
         path: "/",
-        session: undefined, // O cookie é removido ao fechar o navegador
       },
     },
   },
-}
+};
 
-const handler = NextAuth(authOptions)
+const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST };
