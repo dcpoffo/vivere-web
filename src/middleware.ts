@@ -1,53 +1,52 @@
 import { withAuth, NextRequestWithAuth, NextAuthMiddlewareOptions } from "next-auth/middleware";
 import { NextResponse } from "next/server";
+import debug from "debug";
+
+// Configure os namespaces para logs
+const logMiddleware = debug("app:middleware");
+const logAuth = debug("app:auth");
 
 const middleware = (request: NextRequestWithAuth) => {
-    console.log("ENTRANDO NO middleware")
+    logMiddleware("ENTRANDO NO middleware");
 
-    // if (!request.nextauth.token) {
-    //     console.log("Parece que não tem token!!!")
-
-    //     return NextResponse.redirect(new URL("/login", request.url));
-    // }
+    if (!request.nextauth.token) {
+        logMiddleware("Parece que não tem token!!!");
+        return NextResponse.redirect(new URL("/login", request.url));
+    }
 
     const token = request.nextauth.token || {};
-    const isAdminUser = token.role === 'admin';
+    const isAdminUser = token.role === "admin";
 
     if (!isAdminUser) {
+        logMiddleware("Usuário não autorizado, redirecionando para /denied");
         return NextResponse.rewrite(new URL("/denied", request.url));
     }
 
-
-    console.log('--- MIDDLEWARE LOG ---');
-    console.log('Método:', request.method);
-    console.log('URL:', request.url);
-    console.log('Cabeçalhos:', [ ...request.headers ]);
-    console.log("Token: ", request.nextauth.token)
+    logMiddleware("--- MIDDLEWARE LOG ---");
+    logMiddleware("Método: %s", request.method);
+    logMiddleware("URL: %s", request.url);
+    logMiddleware("Cabeçalhos: %O", [ ...request.headers ]); // %O para objetos
+    logMiddleware("Token: %O", request.nextauth.token);
 
     return NextResponse.next();
 };
 
-
 const callbackOptions: NextAuthMiddlewareOptions = {
-    // Qualquer configuração adicional para o middleware
     pages: {
         signIn: "/login", // Redirecionar para /login caso o token seja inválido
     },
     callbacks: {
         authorized: ({ token }) => {
-            // Permitir acesso somente se o token existir
-            console.log("entrou no callbacks")
-            return !!token;
+            logAuth("Verificando autorização no callback...");
+            const isAuthorized = !!token;
+            logAuth("Token presente: %s", isAuthorized);
+            return isAuthorized;
         },
     },
 };
 
-
 export default withAuth(middleware, callbackOptions);
-
-
 
 export const config = {
     matcher: "/private/:path*",
 };
-
