@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import { AuthProvider } from "../../providers/auth-provider";
+import { AuthProvider } from "../../providers/_auth-provider";
 import LayoutContent from "./LayoutContent"; // Novo arquivo que cuidará do layout e da sessão
 import { PacienteProvider } from "@/context/PacienteContext";
+import Providers from "./providers";
 
 const inter = Inter({ subsets: [ "latin" ] });
 
@@ -19,7 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AuthProvider>
+    //<AuthProvider>
+    <Providers>
 
       <PacienteProvider>
 
@@ -31,6 +33,8 @@ export default function RootLayout({
 
       </PacienteProvider>
 
-    </AuthProvider>
+    </Providers>
+
+    //</AuthProvider>
   );
 }
