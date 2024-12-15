@@ -69,7 +69,7 @@ export default function Pacientes() {
     }
 
     return (
-        <div className="bg-slate-300 text-slate-900 w-full h-screen flex justify-center items-start">
+        <div className="bg-slate-300 text-slate-900 w-full h-screen flex justify-center items-start mt-10">
             {dadosPaciente ? (
                 <div className="flex flex-col items-center bg-slate-300 w-full">
                     <h1 className="text-2xl font-bold mb-4">Informações do paciente</h1>
@@ -97,7 +97,106 @@ export default function Pacientes() {
                                 />
                             </label>
                         </div>
-                        {/* Campos adicionais aqui */}
+                        <div className="grid grid-cols-2 gap-4">
+                            <label className="font-semibold">
+                                Situação
+                                <input
+                                    type="text"
+                                    name="situacao"
+                                    value={dadosPaciente.situacao || ''}
+                                    onChange={handleChange}
+                                    disabled={!editando}
+                                    className="w-full border p-2"
+                                />
+                            </label>
+                            <label className="font-semibold">
+                                C.P.F.
+                                <input
+                                    type="text"
+                                    name="cpf"
+                                    value={dadosPaciente.cpf || ''}
+                                    onChange={handleChange}
+                                    disabled={!editando}
+                                    className="w-full border p-2"
+                                />
+                            </label>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <label className="font-semibold">
+                                Contato 1
+                                <input
+                                    type="text"
+                                    name="contato1"
+                                    value={dadosPaciente.contato1 || ''}
+                                    onChange={handleChange}
+                                    disabled={!editando}
+                                    className="w-full border p-2"
+                                />
+                            </label>
+                            <label className="font-semibold">
+                                Contato 2
+                                <input
+                                    type="text"
+                                    name="contato2"
+                                    value={dadosPaciente.contato2 || ''}
+                                    onChange={handleChange}
+                                    disabled={!editando}
+                                    className="w-full border p-2"
+                                />
+                            </label>
+                        </div>
+                        <div className="grid grid-cols-1 gap-2">
+                            <label className="flex flex-col font-semibold">
+                                Data Nascimento
+                                <input
+                                    type="date"
+                                    name="dataNascimento"
+                                    value={dadosPaciente.dataNascimento ? dadosPaciente.dataNascimento.split('T')[ 0 ] : ''}
+                                    onChange={handleChange}
+                                    disabled={!editando}
+                                    className="w-40 border p-2"
+                                />
+                            </label>
+                        </div>
+                        <div className="grid grid-cols-1 gap-2">
+                            <label className="font-semibold">
+                                Endereço
+                                <input
+                                    type="text"
+                                    name="endereco"
+                                    value={dadosPaciente.endereco || ''}
+                                    onChange={handleChange}
+                                    disabled={!editando}
+                                    className="w-full border p-2"
+                                />
+                            </label>
+                        </div>
+                        <div className="grid grid-cols-1 gap-2">
+                            <label className="font-semibold">
+                                E-mail
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={dadosPaciente.email || ''}
+                                    onChange={handleChange}
+                                    disabled={!editando}
+                                    className="w-full border p-2"
+                                />
+                            </label>
+                        </div>
+                        <div className="grid grid-cols-1 gap-2">
+                            <label className="font-semibold">
+                                Profissão
+                                <input
+                                    type="text"
+                                    name="profissao"
+                                    value={dadosPaciente.profissao || ''}
+                                    onChange={handleChange}
+                                    disabled={!editando}
+                                    className="w-full border p-2"
+                                />
+                            </label>
+                        </div>
                         <div className="flex gap-4 mt-4 mb-4 justify-end">
                             {editando ? (
                                 <>

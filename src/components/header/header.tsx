@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React from "react";
 import { SignOutButton } from "../signOutButton";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export function Header() {
     const { data: session } = useSession(); // Usa `useSession` no client-side
@@ -48,9 +48,15 @@ export function Header() {
                     )}
                 </ul>
                 {session && (
-                    <div className="ml-auto font-semibold">
-                        <SignOutButton />
-                    </div>
+                    // <div className="ml-auto font-semibold">
+                    //     <SignOutButton />
+                    // </div>
+                    <button
+                        onClick={() => signOut({ callbackUrl: '/login' })}
+                        className="px-4 py-2 h-10 bg-red-600 text-white rounded-md"
+                    >
+                        Sair
+                    </button>
                 )}
             </nav>
         </header>
