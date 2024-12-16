@@ -57,7 +57,7 @@ const LoginForm = () => {
                 onSubmit={handleLogin}
                 className="p-10 border border-blue-500 rounded-lg w-96"
             >
-                <h1 className="text-3xl font-bold mb-4">Login</h1>
+                <h1 className="text-3xl font-bold mb-4">Vivere Pilates</h1>
                 <p className="text-lg text-slate-700 mb-10">Faça login para continuar</p>
                 <div className="flex flex-col">
                     <div className="flex flex-col gap-1 mb-6">

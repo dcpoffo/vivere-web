@@ -3,8 +3,8 @@
 import { useSession } from "next-auth/react";
 import { Header } from "@/components/header/header";
 import Footer from "@/components/footer/footer";
-import Navegacao from "@/components/navegacao";
 import { usePacienteContext } from "@/context/PacienteContext";
+import { Sidebar } from "@/components/sidebar/sidebar";
 
 export default function LayoutContent({
     children,
@@ -16,9 +16,9 @@ export default function LayoutContent({
 
     return (
         <main className="min-h-screen flex flex-col bg-slate-300">
-            {/* {session && <Header />} Exibe o Header se a sessão existir */}
             {/* {pacienteSelecionado && <Navegacao />} */}
-            {pacienteSelecionado && <Header />}
+            {/* {pacienteSelecionado && <Header />} */}
+            {pacienteSelecionado && <Sidebar />}
             <div className="flex-grow overflow-auto flex justify-center items-center pt-10">
                 {children}
             </div>

@@ -48,15 +48,15 @@ export function Header() {
                     )}
                 </ul>
                 {session && (
-                    // <div className="ml-auto font-semibold">
-                    //     <SignOutButton />
-                    // </div>
-                    <button
-                        onClick={() => signOut({ callbackUrl: '/login' })}
-                        className="px-4 py-2 h-10 bg-red-600 text-white rounded-md"
-                    >
-                        Sair
-                    </button>
+                    <div className="ml-auto font-semibold">
+                        <SignOutButton />
+                    </div>
+                    // <button
+                    //     onClick={() => signOut({ callbackUrl: '/login' })}
+                    //     className="px-4 py-2 h-10 bg-red-600 text-white rounded-md"
+                    // >
+                    //     Sair
+                    // </button>
                 )}
             </nav>
         </header>

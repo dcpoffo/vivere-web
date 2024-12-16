@@ -7,6 +7,7 @@ import { usePacienteContext } from "@/context/PacienteContext";
 import { Paciente } from "@/types/Paciente";
 import { Button } from "@/components/ui/button";
 import DeniedPage from "@/app/denied/page";
+import { SignOutButton } from "@/components/signOutButton";
 
 export default function Pacientes() {
     const { pacienteSelecionado, selecionarPaciente } = usePacienteContext();
@@ -225,24 +226,26 @@ export default function Pacientes() {
                     </form>
                     <div className="flex justify-center items-center mt-4 space-x-4">
                         <BuscaPaciente onPacienteSelecionado={handlePacienteSelecionado} />
-                        <button
+                        <SignOutButton />
+                        {/* <button
                             onClick={() => signOut({ callbackUrl: '/login' })}
                             className="px-4 py-2 h-10 bg-red-600 text-white rounded-md"
                         >
                             Sair
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             ) : (
                 <div className="pt-10 bg-slate-300 text-slate-900 w-full h-screen flex flex-col justify-center items-center">
                     <p>Nenhum paciente selecionado</p>
                     <BuscaPaciente onPacienteSelecionado={handlePacienteSelecionado} />
-                    <button
+                    <SignOutButton />
+                    {/* <button
                         onClick={() => signOut({ callbackUrl: '/login' })}
                         className="px-4 py-2 h-10 bg-red-600 text-white rounded-md"
                     >
                         Sair
-                    </button>
+                    </button> */}
                 </div>
             )}
         </div>

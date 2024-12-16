@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import { AuthProvider } from "../../providers/_auth-provider";
 import LayoutContent from "./LayoutContent"; // Novo arquivo que cuidará do layout e da sessão
 import { PacienteProvider } from "@/context/PacienteContext";
 import Providers from "./providers";

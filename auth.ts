@@ -10,8 +10,11 @@ const credentialsConfig = CredentialsProvider({
         password: { label: "Password", type: "password" },
     },
     async authorize(credentials) {
+        const baseURL = process.env.BASE_URL;
+        const url = `${baseURL}/usuario?email=${credentials?.email}`
+        console.log(url);
         //const url = `http://localhost:3333/usuario?email=${credentials?.email}`;
-        const url = `https://vivere-web-backend.vercel.app/usuario?email=${credentials?.email}`;
+        //const url = `https://vivere-web-backend.vercel.app/usuario?email=${credentials?.email}`;
         const response = await fetch(url, {
             method: "GET",
             headers: {
