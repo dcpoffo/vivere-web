@@ -70,7 +70,7 @@ export default function Pacientes() {
     }
 
     return (
-        <div className="bg-slate-300 text-slate-900 w-full h-screen flex justify-center items-start mt-10">
+        <div className="bg-slate-300 text-slate-900 w-full h-screen flex justify-center items-start">
             {dadosPaciente ? (
                 <div className="flex flex-col items-center bg-slate-300 w-full">
                     <h1 className="text-2xl font-bold mb-4">Informações do paciente</h1>
@@ -198,7 +198,8 @@ export default function Pacientes() {
                                 />
                             </label>
                         </div>
-                        <div className="flex gap-4 mt-4 mb-4 justify-end">
+
+                        <div className="flex gap-4 mt-4 mb-4 justify-end items-center">
                             {editando ? (
                                 <>
                                     <Button type="submit" className="px-4 py-2 h-10 bg-blue-600 text-white rounded-md">
@@ -214,38 +215,27 @@ export default function Pacientes() {
                                     </Button>
                                 </>
                             ) : (
-                                <button
-                                    type="button"
-                                    onClick={handleAlterar}
-                                    className="px-4 py-2 h-10 bg-green-700 text-white rounded-md"
-                                >
-                                    Alterar cadastro
-                                </button>
+                                <>
+                                    <BuscaPaciente onPacienteSelecionado={handlePacienteSelecionado} />
+                                    <button
+                                        type="button"
+                                        onClick={handleAlterar}
+                                        className="px-4 py-2 h-10 bg-green-700 text-white rounded-md  hover:bg-slate-600"
+                                    >
+                                        Alterar cadastro
+                                    </button>
+                                </>
                             )}
                         </div>
+
                     </form>
-                    <div className="flex justify-center items-center mt-4 space-x-4">
-                        <BuscaPaciente onPacienteSelecionado={handlePacienteSelecionado} />
-                        <SignOutButton />
-                        {/* <button
-                            onClick={() => signOut({ callbackUrl: '/login' })}
-                            className="px-4 py-2 h-10 bg-red-600 text-white rounded-md"
-                        >
-                            Sair
-                        </button> */}
-                    </div>
+
                 </div>
             ) : (
                 <div className="pt-10 bg-slate-300 text-slate-900 w-full h-screen flex flex-col justify-center items-center">
                     <p>Nenhum paciente selecionado</p>
                     <BuscaPaciente onPacienteSelecionado={handlePacienteSelecionado} />
                     <SignOutButton />
-                    {/* <button
-                        onClick={() => signOut({ callbackUrl: '/login' })}
-                        className="px-4 py-2 h-10 bg-red-600 text-white rounded-md"
-                    >
-                        Sair
-                    </button> */}
                 </div>
             )}
         </div>

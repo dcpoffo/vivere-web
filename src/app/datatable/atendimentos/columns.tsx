@@ -1,6 +1,8 @@
 "use client"
 
+import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
 
 export type AtendimentosData = {
     id: string;
@@ -14,11 +16,24 @@ export type AtendimentosData = {
 export const columns: ColumnDef<AtendimentosData>[] = [
     {
         accessorKey: "dataAtendimento",
-        header: "Data",
-        cell: ({ cell }) => {
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Data
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            );
+        },
+        cell: ({ cell, column }) => {
             const rawValue = cell.getValue<string>(); // Obtém o valor bruto
             const formattedDate = new Date(rawValue).toLocaleDateString("pt-BR");
-            return <span>{formattedDate}</span>;
+            return (
+
+                <span>{formattedDate}</span>
+            )
         },
     },
     {

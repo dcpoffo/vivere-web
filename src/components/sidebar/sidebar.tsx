@@ -45,6 +45,12 @@ export function Sidebar() {
                 <nav className="flex flex-col gap-4 p-6 mt-10">
                     <Link href="/" onClick={handleCloseSidebar}>
                         <div className="flex items-center gap-3 p-2 bg-gray-300 rounded-md hover:bg-gray-400">
+                            <Users size={20} /> Home
+                        </div>
+                    </Link>
+
+                    <Link href="/private/pacientes" onClick={handleCloseSidebar}>
+                        <div className="flex items-center gap-3 p-2 bg-gray-300 rounded-md hover:bg-gray-400">
                             <Users size={20} /> Pacientes
                         </div>
                     </Link>

@@ -24,6 +24,7 @@ export default async function Home() {
 
           <pre className="bg-slate-900 text-slate-50 p-10 rounded-lg mt-">{JSON.stringify(sessao, null, 2)}</pre>
 
+
           <SignOutButton />
           {/* <form action={async () => {
             "use server";

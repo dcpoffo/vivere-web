@@ -53,10 +53,10 @@ export default function Atendimentos() {
     };
 
     return (
-        <div className="flex flex-col justify-start items-center w-full mt-10">
+        <div className="flex flex-col justify-start items-center w-full">
             <button
                 onClick={handleAtualizar}
-                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                className="bg-blue-500 text-white px-4 py-2 rounded"
             >
                 Atualizar Atendimentos
             </button>

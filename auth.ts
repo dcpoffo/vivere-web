@@ -10,7 +10,13 @@ const credentialsConfig = CredentialsProvider({
         password: { label: "Password", type: "password" },
     },
     async authorize(credentials) {
-        const baseURL = process.env.BASE_URL;
+
+        console.log("********************");
+        console.log("Environment:", process.env.NODE_ENV);
+        console.log("********************");
+
+
+        const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
         const url = `${baseURL}/usuario?email=${credentials?.email}`
         console.log(url);
         //const url = `http://localhost:3333/usuario?email=${credentials?.email}`;
@@ -42,7 +48,24 @@ const config = {
     providers: [ Google, credentialsConfig ],
     pages: {
         signIn: "/login",
-    }
+    },
+    //
+    cookies: {
+        sessionToken: {
+            name: "next-auth.session-token",
+            options: {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                path: "/",
+                maxAge: undefined, // Remove o tempo máximo para tornar o cookie de sessão
+            },
+        },
+    },
+    session: {
+        strategy: "jwt", // Já configurado para JWT no seu caso
+    },
+    //
 } satisfies NextAuthConfig;
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config)

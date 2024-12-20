@@ -3,8 +3,10 @@ import axios from 'axios'
 
 export const useAPI = () => {
 
-  const baseURL_dinamica = process.env.BASE_URL;
-  const baseURL = `${baseURL_dinamica}`
+  //const baseURL_dinamica = process.env.BASE_URL;
+  //const baseURL = `${baseURL_dinamica}`
+
+  const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
   //const baseURL = "http://127.0.0.1:3333";
   //vivere-web-backend.vercel.app
