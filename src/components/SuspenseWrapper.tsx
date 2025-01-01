@@ -1,9 +1,11 @@
 "use client";
 
-import { PropsWithChildren } from "react";
+import { Suspense } from "react";
 
-const SuspenseWrapper = ({ children }: PropsWithChildren) => {
-    return <>{children}</>;
-};
-
-export default SuspenseWrapper;
+export default function SuspenseWrapper({ children }: { children: React.ReactNode }) {
+    return (
+        <Suspense fallback={<div>Carregando...</div>}>
+            {children}
+        </Suspense>
+    );
+}
