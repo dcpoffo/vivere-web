@@ -10,17 +10,9 @@ const credentialsConfig = CredentialsProvider({
         password: { label: "Password", type: "password" },
     },
     async authorize(credentials) {
-
-        console.log("********************");
-        console.log("Environment:", process.env.NODE_ENV);
-        console.log("********************");
-
-
         const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
-        const url = `${baseURL}/usuario?email=${credentials?.email}`
-        console.log(url);
-        //const url = `http://localhost:3333/usuario?email=${credentials?.email}`;
-        //const url = `https://vivere-web-backend.vercel.app/usuario?email=${credentials?.email}`;
+        const url = `${baseURL}/usuario?email=${credentials?.email}`;
+
         const response = await fetch(url, {
             method: "GET",
             headers: {
@@ -40,16 +32,28 @@ const credentialsConfig = CredentialsProvider({
             return null;
         }
 
-        return usuario;
+        // Retorne o usuário autenticado
+        return {
+            id: usuario.id,
+            name: usuario.name, // Use o nome correto da propriedade
+            email: usuario.email,
+            role: usuario.role, // Exemplo: cargo ou tipo de usuário
+            cpf: usuario.cpf,
+            crefito: usuario.crefito,
+            profissao: usuario.profissao,
+        };
     },
-})
+});
 
 const config = {
     providers: [ Google, credentialsConfig ],
     pages: {
         signIn: "/login",
+        signOut: "/login",
     },
-    //
+    session: {
+        strategy: "jwt",
+    },
     cookies: {
         sessionToken: {
             name: "next-auth.session-token",
@@ -58,14 +62,39 @@ const config = {
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "lax",
                 path: "/",
-                maxAge: undefined, // Remove o tempo máximo para tornar o cookie de sessão
+                maxAge: undefined,
+                expires: undefined,
             },
         },
     },
-    session: {
-        strategy: "jwt", // Já configurado para JWT no seu caso
+    callbacks: {
+        jwt: ({ token, user }) => {
+            if (user) {
+                const customUser = user as any;
+                return {
+                    ...token,
+                    role: customUser.role,
+                    cpf: customUser.cpf as string | undefined,
+                    crefito: customUser.crefito as string | undefined,
+                    profissao: customUser.profissao as string | undefined,
+                };
+            }
+            return token;
+        },
+        session: async ({ session, token }) => {
+            return {
+                ...session,
+                user: {
+                    name: token.name,
+                    email: token.email,
+                    role: token.role,
+                    cpf: token.cpf as string | undefined,
+                    crefito: token.crefito as string | undefined,
+                    profissao: token.profissao as string | undefined,
+                },
+            };
+        },
     },
-    //
 } satisfies NextAuthConfig;
 
-export const { handlers, auth, signIn, signOut } = NextAuth(config)
+export const { handlers, auth, signIn, signOut } = NextAuth(config);

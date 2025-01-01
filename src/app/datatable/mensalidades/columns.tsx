@@ -2,7 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, Pencil } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+import { format } from "date-fns";
 
 export type MensalidadesData = {
     id: string;
@@ -16,6 +19,32 @@ export type MensalidadesData = {
 };
 
 export const columns: ColumnDef<MensalidadesData>[] = [
+    {
+        accessorKey: "actions",
+        header: () => (
+            <div className="text-center"></div> // Alinhamento à esquerda para o cabeçalho 
+        ),
+        cell: ({ row }) => {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const router = useRouter();
+            const idPaciente = row.original.id; // Obtém o ID do paciente
+            return (
+                <Button
+                    className="bg-transparent border-none"
+                    variant="ghost"
+                    onClick={() => router.push(`/private/mensalidades/edit/${idPaciente}`)}
+                >
+                    <Pencil color="red" size={16} />
+                </Button>
+            );
+        },
+    },
+    {
+        accessorKey: "id",
+        header: () => (
+            <div>Id</div> // Alinhamento à esquerda para o cabeçalho 
+        ),
+    },
     {
         accessorKey: "ano",
         header: ({ column }) => {
@@ -32,7 +61,9 @@ export const columns: ColumnDef<MensalidadesData>[] = [
     },
     {
         accessorKey: "mes",
-        header: "Mês referência",
+        header: () => (
+            <div>Mês Referência</div> // Alinhamento à esquerda para o cabeçalho 
+        ),
     },
     {
         accessorKey: "dataMensalidade",
@@ -47,10 +78,14 @@ export const columns: ColumnDef<MensalidadesData>[] = [
                 </Button>
             );
         },
-        cell: ({ cell }) => {
-            const rawValue = cell.getValue<string>(); // Obtém o valor bruto
-            const formattedDate = new Date(rawValue).toLocaleDateString("pt-BR");
-            return <span>{formattedDate}</span>;
+        cell: ({ row }) => {
+            const rawDate = row.getValue("dataMensalidade") as string;
+            const date = new Date(rawDate);
+            // Ajusta a data para o fuso horário local 
+            const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+            const formattedDate = localDate.toLocaleDateString("pt-BR"); // Formata a data no formato dd/MM/yyyy 
+
+            return formattedDate;
         },
     },
     {
@@ -70,14 +105,20 @@ export const columns: ColumnDef<MensalidadesData>[] = [
     },
     {
         accessorKey: "pago",
-        header: "Pago",
+        header: () => (
+            <div>Pago</div> // Alinhamento à esquerda para o cabeçalho 
+        ),
     },
     {
         accessorKey: "visualizar",
-        header: "Visualizar",
+        header: () => (
+            <div>Visualizar</div> // Alinhamento à esquerda para o cabeçalho 
+        ),
     },
     {
         accessorKey: "cpfUsuarioLogado",
-        header: "C.P.F. gerador",
+        header: () => (
+            <div>C.P.F. Gerador</div> // Alinhamento à esquerda para o cabeçalho 
+        ),
     },
 ];

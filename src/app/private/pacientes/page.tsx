@@ -1,13 +1,93 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import BuscaPaciente from "@/components/buscaPaciente/buscaPaciente";
 import { usePacienteContext } from "@/context/PacienteContext";
 import { Paciente } from "@/types/Paciente";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea"
 import DeniedPage from "@/app/denied/page";
 import { SignOutButton } from "@/components/signOutButton";
+import { Input } from "@/components/ui/input";
+import { useAPI } from "@/service/API";
+import { useToast } from "@/hooks/use-toast"
+import Link from "next/link";
+
+import { z } from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const formSchema = z.object({
+    nome: z
+        .string()
+        .min(2, { message: "Nome deve ter no mínimo 2 caracteres" })
+        .max(50, { message: "Nome deve ter no máximo 50 caracteres" }),
+
+    cpf: z
+        .string()
+        .nonempty('O CPF é obrigatório.')
+        .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, 'O CPF deve estar no formato xxx.xxx.xxx-xx.')
+        .refine(isValidCPF, { message: 'CPF inválido.' }),
+
+    contato1: z
+        .string()
+        .max(15, { message: "Contato deve ter no máximo 15 caracteres" })
+        .optional(),
+
+    contato2: z
+        .string()
+        .max(15, { message: "Contato deve ter no máximo 15 caracteres" })
+        .optional(),
+
+    endereco: z
+        .string()
+        .max(200, { message: "Contato deve ter no máximo 200 caracteres" })
+        .optional(),
+
+    profissao: z
+        .string()
+        .max(30, { message: "Contato deve ter no máximo 30 caracteres" })
+        .optional(),
+
+    email: z
+        .string()
+        .optional(),
+
+    situacao: z.enum([ 'ATIVO', 'INATIVO' ], { message: "Selecione uma situação válida" }),
+
+    dataNascimento: z
+        .string()
+        .regex(/^\d{4}-\d{2}-\d{2}$/, { message: "Data deve estar no formato yyyy-MM-dd" })
+})
+
+function isValidCPF(cpf: string): boolean {
+    cpf = cpf.replace(/[^\d]/g, ''); // Remove os caracteres não numéricos
+    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+
+    let sum = 0;
+    let remainder;
+
+    for (let i = 1; i <= 9; i++) {
+        sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+    }
+
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cpf.substring(9, 10))) return false;
+
+    sum = 0;
+    for (let i = 1; i <= 10; i++) {
+        sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+    }
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cpf.substring(10, 11))) return false;
+
+    return true;
+}
 
 export default function Pacientes() {
     const { pacienteSelecionado, selecionarPaciente } = usePacienteContext();
@@ -15,9 +95,39 @@ export default function Pacientes() {
     const [ dadosPaciente, setDadosPaciente ] = useState<Paciente | null>(pacienteSelecionado);
     const [ dadosOriginais, setDadosOriginais ] = useState<Paciente | null>(pacienteSelecionado);
 
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            nome: "",
+            contato1: "",
+            contato2: "",
+            endereco: "",
+            profissao: "",
+            email: "",
+            situacao: "ATIVO",
+            cpf: "",
+            dataNascimento: new Date().toISOString().split('T')[ 0 ],
+        }
+    })
+
     useEffect(() => {
         setDadosPaciente(pacienteSelecionado);
         setDadosOriginais(pacienteSelecionado);
+        if (pacienteSelecionado) {
+            form.setValue('nome', pacienteSelecionado.nome);
+            form.setValue('situacao', pacienteSelecionado.situacao as "ATIVO" | "INATIVO",);
+            form.setValue('cpf', pacienteSelecionado.cpf);
+            form.setValue('contato1', pacienteSelecionado.contato1 || '');
+            form.setValue('contato2', pacienteSelecionado.contato2 || '');
+            form.setValue('endereco', pacienteSelecionado.endereco || '');
+            form.setValue('profissao', pacienteSelecionado.profissao || '');
+            form.setValue('email', pacienteSelecionado.email || '');
+            const dataFormatada = pacienteSelecionado.dataNascimento
+                ? pacienteSelecionado.dataNascimento.split('T')[ 0 ]
+                : new Date().toISOString().split('T')[ 0 ];
+            form.setValue('dataNascimento', dataFormatada);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ pacienteSelecionado ]);
 
     const handlePacienteSelecionado = (paciente: Paciente) => {
@@ -26,32 +136,96 @@ export default function Pacientes() {
         setDadosOriginais(paciente);
     };
 
-    const handleSalvar = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const api = useAPI();
+    const { toast } = useToast()
+
+
+    async function onSubmit(data: z.infer<typeof formSchema>) {
+        const dadosAjustados = {
+            ...data,
+            dataNascimento: `${data.dataNascimento}T00:00:00.000Z`,
+        };
         if (dadosPaciente) {
             try {
-                selecionarPaciente(dadosPaciente);
-                setEditando(false);
-            } catch (error) {
-                console.error("Erro ao salvar os dados:", error);
-            }
-        } else {
-            console.error("Dados do paciente não estão disponíveis.");
-        }
-    };
+                const response = await api.put(`/paciente?id=${dadosPaciente.id}`, dadosAjustados); // Use dadosAjustados aqui
+                selecionarPaciente(response.data);
+                console.log(response.data);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                if (response.data) {
+                    toast({
+                        duration: 3000,
+                        title: "Atualização de Cadastro",
+                        description: "Cadastro atualizado com sucesso",
+                    });
+                }
+                setEditando(false);
+            } catch (error: any) {
+                if (error.response) {
+                    // O servidor respondeu com um status diferente de 2xx                     
+                    console.error('Erro ao atualizar cadastro:', error.response.data.message);
+                    toast({
+                        duration: 4000,
+                        variant: "destructive",
+                        title: "Erro ao atualizar cadastro",
+                        description: error.response.data.message,
+                    })
+                    // Exibir a mensagem de erro para o usuário 
+                } else if (error.request) {
+                    // A requisição foi feita mas não houve resposta 
+                    console.error('Erro ao atualizar cadastro. Sem resposta do servidor. ', error.request);
+                    toast({
+                        duration: 4000,
+                        variant: "destructive",
+                        title: "Erro ao atualizar cadastro. Sem resposta do servidor",
+                        description: error.request,
+                    })
+                } else {
+                    // Algo aconteceu ao configurar a requisição c
+                    console.error('Erro ao atualizar cadastro. Erro inesperado', error.message);
+                    // Exibir uma mensagem de erro genérica 
+                    toast({
+                        duration: 4000,
+                        variant: "destructive",
+                        title: "Erro ao atualizar cadastro. Erro inesperado",
+                        description: error.message,
+                    })
+                }
+            }
+        }
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (dadosPaciente) {
             const { name, value } = e.target;
-            setDadosPaciente((prev) => ({ ...prev!, [ name ]: value }));
+            const formattedValue = name === "dataNascimento" ? `${value}T00:00:00.000Z` : value;
+
+            setDadosPaciente((prev) => ({ ...prev!, [ name ]: formattedValue }));
         }
     };
 
     const handleAlterar = () => setEditando(true);
+
     const handleCancelar = () => {
-        setDadosPaciente(dadosOriginais);
+        if (dadosOriginais) {
+            setDadosPaciente(dadosOriginais);
+            const dataFormatada = dadosOriginais.dataNascimento
+                ? dadosOriginais.dataNascimento.split('T')[ 0 ]
+                : new Date().toISOString().split('T')[ 0 ];
+            form.reset({
+                nome: dadosOriginais.nome,
+                situacao: dadosOriginais.situacao as "ATIVO" | "INATIVO",
+                cpf: dadosOriginais.cpf,
+                dataNascimento: dataFormatada,
+                contato1: dadosOriginais.contato1,
+                contato2: dadosOriginais.contato2,
+                endereco: dadosOriginais.endereco,
+                profissao: dadosOriginais.profissao,
+                email: dadosOriginais.email,
+            });
+        }
         setEditando(false);
     };
+
 
     const { data: session } = useSession();
 
@@ -59,181 +233,259 @@ export default function Pacientes() {
         return (
             <div className="flex flex-col items-center justify-center h-screen">
                 <DeniedPage />
-                {/* <button
-                    onClick={() => signIn()}
-                    className="px-4 py-2 h-10 bg-blue-600 text-white rounded-md"
-                >
-                    Entrar
-                </button> */}
             </div>
         );
     }
 
     return (
-        <div className="bg-slate-300 text-slate-900 w-full h-screen flex justify-center items-start">
+        <div className="bg-slate-300 text-slate-900 w-9/12 h-auto flex justify-center items-start">
             {dadosPaciente ? (
                 <div className="flex flex-col items-center bg-slate-300 w-full">
-                    <h1 className="text-2xl font-bold mb-4">Informações do paciente</h1>
-                    <form onSubmit={handleSalvar} className="flex flex-col gap-4 w-1/2">
-                        <div className="grid grid-cols-5 gap-2 items-center">
-                            <label className="col-span-1 font-semibold">
-                                Código
-                                <input
-                                    type="text"
-                                    name="id"
-                                    value={dadosPaciente.id || ""}
-                                    disabled
-                                    className="w-full border p-2"
-                                />
-                            </label>
-                            <label className="col-span-4 font-semibold">
-                                Nome
-                                <input
-                                    type="text"
-                                    name="nome"
-                                    value={dadosPaciente.nome || ""}
-                                    onChange={handleChange}
-                                    disabled={!editando}
-                                    className="w-full border p-2"
-                                />
-                            </label>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <label className="font-semibold">
-                                Situação
-                                <input
-                                    type="text"
-                                    name="situacao"
-                                    value={dadosPaciente.situacao || ''}
-                                    onChange={handleChange}
-                                    disabled={!editando}
-                                    className="w-full border p-2"
-                                />
-                            </label>
-                            <label className="font-semibold">
-                                C.P.F.
-                                <input
-                                    type="text"
-                                    name="cpf"
-                                    value={dadosPaciente.cpf || ''}
-                                    onChange={handleChange}
-                                    disabled={!editando}
-                                    className="w-full border p-2"
-                                />
-                            </label>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <label className="font-semibold">
-                                Contato 1
-                                <input
-                                    type="text"
-                                    name="contato1"
-                                    value={dadosPaciente.contato1 || ''}
-                                    onChange={handleChange}
-                                    disabled={!editando}
-                                    className="w-full border p-2"
-                                />
-                            </label>
-                            <label className="font-semibold">
-                                Contato 2
-                                <input
-                                    type="text"
-                                    name="contato2"
-                                    value={dadosPaciente.contato2 || ''}
-                                    onChange={handleChange}
-                                    disabled={!editando}
-                                    className="w-full border p-2"
-                                />
-                            </label>
-                        </div>
-                        <div className="grid grid-cols-1 gap-2">
-                            <label className="flex flex-col font-semibold">
-                                Data Nascimento
-                                <input
-                                    type="date"
-                                    name="dataNascimento"
-                                    value={dadosPaciente.dataNascimento ? dadosPaciente.dataNascimento.split('T')[ 0 ] : ''}
-                                    onChange={handleChange}
-                                    disabled={!editando}
-                                    className="w-40 border p-2"
-                                />
-                            </label>
-                        </div>
-                        <div className="grid grid-cols-1 gap-2">
-                            <label className="font-semibold">
-                                Endereço
-                                <input
-                                    type="text"
-                                    name="endereco"
-                                    value={dadosPaciente.endereco || ''}
-                                    onChange={handleChange}
-                                    disabled={!editando}
-                                    className="w-full border p-2"
-                                />
-                            </label>
-                        </div>
-                        <div className="grid grid-cols-1 gap-2">
-                            <label className="font-semibold">
-                                E-mail
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={dadosPaciente.email || ''}
-                                    onChange={handleChange}
-                                    disabled={!editando}
-                                    className="w-full border p-2"
-                                />
-                            </label>
-                        </div>
-                        <div className="grid grid-cols-1 gap-2">
-                            <label className="font-semibold">
-                                Profissão
-                                <input
-                                    type="text"
-                                    name="profissao"
-                                    value={dadosPaciente.profissao || ''}
-                                    onChange={handleChange}
-                                    disabled={!editando}
-                                    className="w-full border p-2"
-                                />
-                            </label>
-                        </div>
+                    <h1 className="text-2xl font-bold mb-4">
+                        Informações do Paciente
+                    </h1>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-1 w-1/2">
+                            <FormField
+                                control={form.control}
+                                name="nome"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="col-span-1 font-semibold">Nome</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                disabled={!editando}
+                                                placeholder="Nome do Paciente"
+                                                className="w-full border p-2 bg-white text-black"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <div className="flex gap-4 mt-4 mb-4 justify-end items-center">
-                            {editando ? (
-                                <>
-                                    <Button type="submit" className="px-4 py-2 h-10 bg-blue-600 text-white rounded-md">
-                                        Salvar
-                                    </Button>
+                            <div className="grid grid-cols-2 gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name="situacao"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="col-span-1 font-semibold">Situação</FormLabel>
+                                            <FormControl>
+                                                <Select
+                                                    {...field}
+                                                    disabled={!editando}
+                                                    defaultValue="ATIVO"
+                                                    onValueChange={field.onChange}
+                                                >
+                                                    <SelectTrigger className="w-full border p-2 bg-white text-black">
+                                                        <SelectValue placeholder="Selecione o Status" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="ATIVO">ATIVO</SelectItem>
+                                                        <SelectItem value="INATIVO">INATIVO</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="cpf"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="col-span-1 font-semibold">C.P.F.</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    disabled={!editando}
+                                                    placeholder="xxx.xxx.xxx-xx"
+                                                    className="w-full border p-2 bg-white text-black"
+                                                />
+                                            </FormControl>
+                                            <FormDescription>Considerar o CPF com pontos e hífem (xxx.xxx.xxx-xx).</FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name="contato1"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="col-span-1 font-semibold">Contato 1</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    disabled={!editando}
+                                                    className="w-full border p-2 bg-white text-black"
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="contato2"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="col-span-1 font-semibold">Contato 2</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    disabled={!editando}
+                                                    className="w-full border p-2 bg-white text-black"
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
+                            <FormField
+                                control={form.control}
+                                name="dataNascimento"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="col-span-1 font-semibold">Data Nascimento</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                disabled={!editando}
+                                                type="date"
+                                                name="dataNascimento"
+                                                className="w-40 border p-2 bg-white text-black"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="endereco"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="col-span-1 font-semibold">Endereço</FormLabel>
+                                        <FormControl>
+                                            <Textarea
+                                                {...field}
+                                                disabled={!editando}
+                                                className="w-full border p-2 bg-white text-black resize-none"
+                                                rows={4}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="col-span-1 font-semibold">E-mail</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                disabled={!editando}
+                                                placeholder="email@email.com"
+                                                className="w-full border p-2 bg-white text-black"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="profissao"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="col-span-1 font-semibold">Profissão</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                disabled={!editando}
+                                                className="w-full border p-2 bg-white text-black"
+                                            />
+                                        </FormControl>
+                                        {/* <FormDescription>
+                                        This is your public display name.
+                                    </FormDescription> */}
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <div className="grid grid-cols-3 gap-4 mt-2">
+                                {editando && (
+                                    <>
+                                        <Button
+                                            type="button"
+                                            variant="destructive"
+                                            onClick={handleCancelar}
+                                            className="px-4 py-2 h-10 text-white hover:bg-red-400"
+                                        >
+                                            Cancelar
+                                        </Button>
+                                        <Button
+                                            type="submit"
+                                            className="px-4 py-2 h-10 bg-blue-600 text-white rounded-md hover:bg-blue-500"
+                                        >
+                                            Salvar
+                                        </Button>
+                                    </>
+                                )}
+                            </div>
+
+                        </form>
+                    </Form>
+                    <>
+                        {!editando &&
+                            <div className="flex gap-2 justify-end items-center">
+                                <Link href="/private/pacientes/new">
                                     <Button
                                         type="button"
-                                        variant="destructive"
-                                        onClick={handleCancelar}
-                                        className="px-4 py-2 h-10 text-white"
+                                        className="px-4 py-2 h-10 bg-blue-600 text-white rounded-md hover:bg-blue-500"
                                     >
-                                        Cancelar
+                                        Novo Paciente
                                     </Button>
-                                </>
-                            ) : (
-                                <>
-                                    <BuscaPaciente onPacienteSelecionado={handlePacienteSelecionado} />
-                                    <button
-                                        type="button"
-                                        onClick={handleAlterar}
-                                        className="px-4 py-2 h-10 bg-green-700 text-white rounded-md  hover:bg-slate-600"
-                                    >
-                                        Alterar cadastro
-                                    </button>
-                                </>
-                            )}
-                        </div>
-
-                    </form>
-
+                                </Link>
+                                <BuscaPaciente onPacienteSelecionado={handlePacienteSelecionado} />
+                                <Button
+                                    type="button"
+                                    onClick={handleAlterar}
+                                    className="px-4 py-2 h-10 bg-green-700 text-white rounded-md  hover:bg-green-600"
+                                >
+                                    Alterar cadastro
+                                </Button>
+                            </div>}
+                    </>
                 </div>
             ) : (
-                <div className="pt-10 bg-slate-300 text-slate-900 w-full h-screen flex flex-col justify-center items-center">
+                <div className="pt-10 bg-slate-300 text-slate-900 w-full h-auto flex flex-col justify-center items-center">
                     <p>Nenhum paciente selecionado</p>
+                    <Link href="/private/pacientes/new">
+                        <Button
+                            type="button"
+                            className="px-4 py-2 h-10 bg-blue-600 text-white rounded-md hover:bg-blue-500"
+                        >
+                            Novo Paciente
+                        </Button>
+                    </Link>
                     <BuscaPaciente onPacienteSelecionado={handlePacienteSelecionado} />
                     <SignOutButton />
                 </div>

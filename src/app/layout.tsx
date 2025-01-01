@@ -5,6 +5,7 @@ import "./globals.css";
 import LayoutContent from "./LayoutContent"; // Novo arquivo que cuidará do layout e da sessão
 import { PacienteProvider } from "@/context/PacienteContext";
 import Providers from "./providers";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: [ "latin" ] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
         <html lang="pt-br" className="light">
           <body className={inter.className}>
             <LayoutContent>{children}</LayoutContent>
+            <Toaster />
           </body>
         </html>
 

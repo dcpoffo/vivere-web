@@ -5,6 +5,7 @@ import { Header } from "@/components/header/header";
 import Footer from "@/components/footer/footer";
 import { usePacienteContext } from "@/context/PacienteContext";
 import { Sidebar } from "@/components/sidebar/sidebar";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function LayoutContent({
     children,
@@ -19,9 +20,10 @@ export default function LayoutContent({
             {/* {pacienteSelecionado && <Navegacao />} */}
             {/* {pacienteSelecionado && <Header />} */}
             {pacienteSelecionado && <Sidebar />}
-            <div className="flex-grow overflow-auto flex justify-center items-center pt-10">
+            <div className="flex-grow overflow-auto flex justify-center items-center pt-5">
                 {children}
             </div>
+            <Toaster />
             {/* <Footer /> */}
         </main>
     );

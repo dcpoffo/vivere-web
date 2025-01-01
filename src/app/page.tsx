@@ -2,8 +2,7 @@
 //import { LoginForm } from '@/components/login/form-login';
 //import { SignOutButton } from '@/components/signOutButton';
 import { SignOutButton } from '@/components/signOutButton';
-import { auth, signIn, signOut } from 'auth';
-import { useSession } from 'next-auth/react';
+import { auth, signIn } from 'auth';
 import Link from 'next/link';
 
 // eslint-disable-next-line @next/next/no-async-client-component
@@ -26,17 +25,8 @@ export default async function Home() {
 
 
           <SignOutButton />
-          {/* <form action={async () => {
-            "use server";
-            await signOut()
-          }}>
-            <button type='submit'>Sair</button>
-
-          </form> */}
-
         </>
       ) : (
-        //<LoginForm />
         <form action={async () => {
           "use server";
           await signIn()

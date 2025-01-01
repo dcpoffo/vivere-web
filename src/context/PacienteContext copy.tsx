@@ -1,6 +1,5 @@
 "use client"
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import axios from 'axios';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface Paciente {
     id: string;
@@ -13,43 +12,23 @@ interface Paciente {
     email?: string;
     situacao: string;
     profissao?: string;
+    // Outras propriedades do paciente, se houver
 }
 
 interface PacienteContextType {
     pacienteSelecionado: Paciente | null;
     selecionarPaciente: (paciente: Paciente) => void;
-    pacientes: Paciente[];
-    addPaciente: (paciente: Paciente) => void;
-    fetchPacientes: () => void;
 }
 
 const PacienteContext = createContext<PacienteContextType | undefined>(undefined);
 
 export const PacienteProvider = ({ children }: { children: ReactNode }) => {
     const [ pacienteSelecionado, setPacienteSelecionado ] = useState<Paciente | null>(null);
-    const [ pacientes, setPacientes ] = useState<Paciente[]>([]);
 
     const selecionarPaciente = (paciente: Paciente) => setPacienteSelecionado(paciente);
 
-    const addPaciente = (paciente: Paciente) => {
-        setPacientes((prevPacientes) => [ ...prevPacientes, paciente ]);
-    };
-
-    const fetchPacientes = async () => {
-        try {
-            const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/pacientes`);
-            setPacientes(response.data);
-        } catch (error) {
-            console.error('Erro ao buscar pacientes:', error);
-        }
-    };
-
-    useEffect(() => {
-        fetchPacientes();
-    }, []);
-
     return (
-        <PacienteContext.Provider value={{ pacienteSelecionado, selecionarPaciente, pacientes, addPaciente, fetchPacientes }}>
+        <PacienteContext.Provider value={{ pacienteSelecionado, selecionarPaciente }}>
             {children}
         </PacienteContext.Provider>
     );

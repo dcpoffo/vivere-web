@@ -23,17 +23,15 @@ import { CircleArrowLeft, CircleArrowRight } from "lucide-react"
 import { useState } from "react"
 
 interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[];
-    data: TData[];
-    onRowClick?: (id: string) => void; // Adiciona um parâmetro para a função de clique na linha
+    columns: ColumnDef<TData, TValue>[]
+    data: TData[]
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
-    onRowClick, // Recebe a função de clique na linha
 }: DataTableProps<TData, TValue>) {
-    const [ sorting, setSorting ] = useState<SortingState>([]);
+    const [ sorting, setSorting ] = useState<SortingState>([])
     const table = useReactTable({
         data,
         columns,
@@ -44,11 +42,11 @@ export function DataTable<TData, TValue>({
         state: {
             sorting,
         },
-    });
+    })
 
     return (
         <>
-            <div className="rounded-md border border-gray-700 w-full">
+            <div className="rounded-md border border-gray-700">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -74,8 +72,6 @@ export function DataTable<TData, TValue>({
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
-                                    onClick={() => onRowClick?.(row.original.id)} // Chama a função onRowClick com o id da linha
-                                    style={{ cursor: "pointer" }} // Para indicar que a linha é clicável
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
@@ -113,6 +109,8 @@ export function DataTable<TData, TValue>({
                     <CircleArrowRight />
                 </Button>
             </div>
+
+
         </>
-    );
+    )
 }

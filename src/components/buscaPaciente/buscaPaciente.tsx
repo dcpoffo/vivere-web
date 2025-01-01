@@ -52,7 +52,7 @@ const BuscaPaciente: React.FC<BuscaPacienteProps> = ({ onPacienteSelecionado }) 
 
     return (
         <div>
-            <button className='mt-4 mb-4 px-4 py-2 h-10 bg-green-700 text-white rounded-md hover:bg-slate-600' onClick={handleOpen}>
+            <button className='px-4 py-2 h-10 bg-green-700 text-white rounded-md hover:bg-green-600' onClick={handleOpen}>
                 Selecionar paciente
             </button>
 
