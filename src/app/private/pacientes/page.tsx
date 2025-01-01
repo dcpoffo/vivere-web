@@ -56,7 +56,9 @@ const formSchema = z.object({
         .string()
         .optional(),
 
-    situacao: z.enum([ 'ATIVO', 'INATIVO' ], { message: "Selecione uma situação válida" }),
+    situacao: z
+        .string()
+        .optional(),
 
     dataNascimento: z
         .string()
@@ -104,31 +106,56 @@ export default function Pacientes() {
             endereco: "",
             profissao: "",
             email: "",
-            situacao: "ATIVO",
+            situacao: "",
             cpf: "",
             dataNascimento: new Date().toISOString().split('T')[ 0 ],
         }
     })
 
     useEffect(() => {
-        setDadosPaciente(pacienteSelecionado);
-        setDadosOriginais(pacienteSelecionado);
         if (pacienteSelecionado) {
-            form.setValue('nome', pacienteSelecionado.nome);
-            form.setValue('situacao', pacienteSelecionado.situacao as "ATIVO" | "INATIVO",);
-            form.setValue('cpf', pacienteSelecionado.cpf);
-            form.setValue('contato1', pacienteSelecionado.contato1 || '');
-            form.setValue('contato2', pacienteSelecionado.contato2 || '');
-            form.setValue('endereco', pacienteSelecionado.endereco || '');
-            form.setValue('profissao', pacienteSelecionado.profissao || '');
-            form.setValue('email', pacienteSelecionado.email || '');
-            const dataFormatada = pacienteSelecionado.dataNascimento
-                ? pacienteSelecionado.dataNascimento.split('T')[ 0 ]
-                : new Date().toISOString().split('T')[ 0 ];
-            form.setValue('dataNascimento', dataFormatada);
+            console.log(pacienteSelecionado.situacao)
+            form.reset({
+                nome: pacienteSelecionado.nome,
+                //situacao: pacienteSelecionado.situacao as "ATIVO" | "INATIVO",  // Verifique se "INATIVO" está sendo corretamente atribuído
+                situacao: pacienteSelecionado.situacao,
+                cpf: pacienteSelecionado.cpf,
+                contato1: pacienteSelecionado.contato1,
+                contato2: pacienteSelecionado.contato2,
+                endereco: pacienteSelecionado.endereco,
+                profissao: pacienteSelecionado.profissao,
+                email: pacienteSelecionado.email,
+                dataNascimento: pacienteSelecionado.dataNascimento
+                    ? pacienteSelecionado.dataNascimento.split('T')[ 0 ]
+                    : new Date().toISOString().split('T')[ 0 ]
+            });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ pacienteSelecionado ]);
+    }, [ pacienteSelecionado, form ]);
+
+    console.log(pacienteSelecionado?.situacao)
+
+    // useEffect(() => {
+    //     setDadosPaciente(pacienteSelecionado);
+    //     setDadosOriginais(pacienteSelecionado);
+    //     if (pacienteSelecionado) {
+    //         form.reset({
+    //             nome: pacienteSelecionado.nome,
+    //             situacao: pacienteSelecionado.situacao as "ATIVO" | "INATIVO",
+    //             cpf: pacienteSelecionado.cpf,
+    //             contato1: pacienteSelecionado.contato1,
+    //             contato2: pacienteSelecionado.contato2,
+    //             endereco: pacienteSelecionado.endereco,
+    //             profissao: pacienteSelecionado.profissao,
+    //             email: pacienteSelecionado.email,
+    //             dataNascimento: pacienteSelecionado.dataNascimento
+    //                 ? pacienteSelecionado.dataNascimento.split('T')[ 0 ]
+    //                 : new Date().toISOString().split('T')[ 0 ]
+    //         })            
+    //     }
+    //     console.log(pacienteSelecionado);
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [ pacienteSelecionado ]);
+    // // 
 
     const handlePacienteSelecionado = (paciente: Paciente) => {
         selecionarPaciente(paciente);
@@ -213,7 +240,7 @@ export default function Pacientes() {
                 : new Date().toISOString().split('T')[ 0 ];
             form.reset({
                 nome: dadosOriginais.nome,
-                situacao: dadosOriginais.situacao as "ATIVO" | "INATIVO",
+                situacao: dadosOriginais.situacao,
                 cpf: dadosOriginais.cpf,
                 dataNascimento: dataFormatada,
                 contato1: dadosOriginais.contato1,
@@ -276,7 +303,7 @@ export default function Pacientes() {
                                                 <Select
                                                     {...field}
                                                     disabled={!editando}
-                                                    defaultValue="ATIVO"
+                                                    value={field.value}
                                                     onValueChange={field.onChange}
                                                 >
                                                     <SelectTrigger className="w-full border p-2 bg-white text-black">

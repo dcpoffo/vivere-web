@@ -71,13 +71,25 @@ const BuscaPaciente: React.FC<BuscaPacienteProps> = ({ onPacienteSelecionado }) 
                         {filteredPacientes.map((paciente: Paciente) => (
                             <li
                                 key={paciente.id}
-                                className='p-2 border-b text-slate-900 cursor-pointer'
+                                className={`p-2 border-b text-black cursor-pointer ${paciente.situacao === 'ATIVO' ? 'bg-green-400' : 'bg-red-400'
+                                    }`}
                                 onClick={() => handleSelectPaciente(paciente)}
                             >
                                 {paciente.nome}
                             </li>
                         ))}
                     </ul>
+                    {/* <ul className='mt-4 max-h-60 overflow-y-auto'>
+                        {filteredPacientes.map((paciente: Paciente) => (
+                            <li
+                                key={paciente.id}
+                                className='p-2 border-b text-slate-900 cursor-pointer'
+                                onClick={() => handleSelectPaciente(paciente)}
+                            >
+                                {paciente.nome}
+                            </li>
+                        ))}
+                    </ul> */}
                     <button className='mt-4 bg-blue-500 text-white px-4 py-2 rounded' onClick={() => setOpen(false)}>
                         Fechar
                     </button>

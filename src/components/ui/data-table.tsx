@@ -22,13 +22,13 @@ import { Button } from "./button"
 import { CircleArrowLeft, CircleArrowRight } from "lucide-react"
 import { useState } from "react"
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { id: string }, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     onRowClick?: (id: string) => void; // Adiciona um parâmetro para a função de clique na linha
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: string }, TValue>({
     columns,
     data,
     onRowClick, // Recebe a função de clique na linha
