@@ -191,7 +191,7 @@ export default function Mensalidades() {
             {
                 !loading && mensalidades.length > 0 && (
                     <div className="flex flex-col justify-center w-full container mx-auto mt-4">
-                        <DataTable columns={columns} data={mensalidades} onRowClick={handleRowClick} />
+                        <DataTable columns={columns} data={mensalidades} onRowClick={handleRowClick} showSearch={false} />
                     </div>
                 )
             }

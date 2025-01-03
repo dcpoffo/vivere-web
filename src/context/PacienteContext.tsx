@@ -8,7 +8,7 @@ interface Paciente {
     cpf: string;
     contato1?: string;
     contato2?: string;
-    dataNascimento?: string;
+    dataNascimento?: Date;
     endereco?: string;
     email?: string;
     situacao: string;
@@ -21,6 +21,7 @@ interface PacienteContextType {
     pacientes: Paciente[];
     addPaciente: (paciente: Paciente) => void;
     fetchPacientes: () => void;
+    limparPacienteSelecionado: () => void;
 }
 
 const PacienteContext = createContext<PacienteContextType | undefined>(undefined);
@@ -28,6 +29,8 @@ const PacienteContext = createContext<PacienteContextType | undefined>(undefined
 export const PacienteProvider = ({ children }: { children: ReactNode }) => {
     const [ pacienteSelecionado, setPacienteSelecionado ] = useState<Paciente | null>(null);
     const [ pacientes, setPacientes ] = useState<Paciente[]>([]);
+
+    const limparPacienteSelecionado = () => setPacienteSelecionado(null);
 
     const selecionarPaciente = (paciente: Paciente) => setPacienteSelecionado(paciente);
 
@@ -49,7 +52,7 @@ export const PacienteProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     return (
-        <PacienteContext.Provider value={{ pacienteSelecionado, selecionarPaciente, pacientes, addPaciente, fetchPacientes }}>
+        <PacienteContext.Provider value={{ pacienteSelecionado, selecionarPaciente, pacientes, addPaciente, fetchPacientes, limparPacienteSelecionado }}>
             {children}
         </PacienteContext.Provider>
     );

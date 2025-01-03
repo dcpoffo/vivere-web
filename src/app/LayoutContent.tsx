@@ -17,9 +17,8 @@ export default function LayoutContent({
 
     return (
         <main className="min-h-screen flex flex-col bg-slate-300">
-            {/* {pacienteSelecionado && <Navegacao />} */}
-            {/* {pacienteSelecionado && <Header />} */}
-            {pacienteSelecionado && <Sidebar />}
+            {session && <Sidebar />}
+            {/* <Sidebar /> */}
             <div className="flex-grow overflow-auto flex justify-center items-center pt-5">
                 {children}
             </div>

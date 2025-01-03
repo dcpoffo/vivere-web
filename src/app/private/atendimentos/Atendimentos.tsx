@@ -176,7 +176,7 @@ export default function Atendimentos() {
             {
                 !loading && atendimentos.length > 0 && (
                     <div className="flex flex-col justify-center w-full container mx-auto mt-4">
-                        <DataTable columns={columns} data={atendimentos} onRowClick={handleRowClick} />
+                        <DataTable columns={columns} data={atendimentos} onRowClick={handleRowClick} showSearch={false} />
                     </div>
                 )
             }

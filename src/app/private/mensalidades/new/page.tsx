@@ -82,8 +82,6 @@ export default function NovoAtendimento() {
         return months[ monthNumber - 1 ];
     }
 
-
-
     async function onSubmit(data: z.infer<typeof formSchema>) {
         const dadosAjustados = {
             ...data,

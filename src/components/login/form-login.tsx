@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { getSession } from "next-auth/react";
+import { usePacienteContext } from "@/context/PacienteContext";
 
 const LoginForm = () => {
 
@@ -12,11 +13,13 @@ const LoginForm = () => {
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
     const [ error, setError ] = useState("");
+    const { pacienteSelecionado, limparPacienteSelecionado } = usePacienteContext();
 
     useEffect(() => {
         const checkSessionAndSignOut = async () => {
             const session = await getSession();
             if (session) {
+                limparPacienteSelecionado();
                 // Se uma sessão estiver ativa, faz o logout para limpar o token
                 await signOut({ redirect: false });
             }

@@ -15,14 +15,13 @@ export default async function Home() {
       {sessao && sessao.user ? (
         <>
           <p>Olá {sessao.user.name}!</p>
-          <button className='mt-4 rounded-lg bg-slate-500 text-white px-4 py-2 hover:bg-slate-600'>
+          {/* <button className='mt-4 rounded-lg bg-slate-500 text-white px-4 py-2 hover:bg-slate-600'>
             <Link href="/private/pacientes">
               Pacientes privado
             </Link>
-          </button>
+          </button> */}
 
           <pre className="bg-slate-900 text-slate-50 p-10 rounded-lg mt-">{JSON.stringify(sessao, null, 2)}</pre>
-
 
           <SignOutButton />
         </>

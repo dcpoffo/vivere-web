@@ -1,45 +1,19 @@
-"use client"
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+"use client";
 
-import { z } from "zod"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useSession } from "next-auth/react";
 import DeniedPage from "@/app/denied/page";
-import { useAPI } from "@/service/API";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { usePacienteContext } from "@/context/PacienteContext";
-
-function isValidCPF(cpf: string): boolean {
-    cpf = cpf.replace(/[^\d]/g, ''); // Remove os caracteres não numéricos
-    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
-
-    let sum = 0;
-    let remainder;
-
-    for (let i = 1; i <= 9; i++) {
-        sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
-    }
-
-    remainder = (sum * 10) % 11;
-    if (remainder === 10 || remainder === 11) remainder = 0;
-    if (remainder !== parseInt(cpf.substring(9, 10))) return false;
-
-    sum = 0;
-    for (let i = 1; i <= 10; i++) {
-        sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
-    }
-    remainder = (sum * 10) % 11;
-    if (remainder === 10 || remainder === 11) remainder = 0;
-    if (remainder !== parseInt(cpf.substring(10, 11))) return false;
-
-    return true;
-}
+import { useAPI } from "@/service/API";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const formSchema = z.object({
     nome: z
@@ -84,7 +58,43 @@ const formSchema = z.object({
         .regex(/^\d{4}-\d{2}-\d{2}$/, { message: "Data deve estar no formato yyyy-MM-dd" })
 })
 
-export default function NovoPaciente() {
+function isValidCPF(cpf: string): boolean {
+    cpf = cpf.replace(/[^\d]/g, ''); // Remove os caracteres não numéricos
+    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+
+    let sum = 0;
+    let remainder;
+
+    for (let i = 1; i <= 9; i++) {
+        sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+    }
+
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cpf.substring(9, 10))) return false;
+
+    sum = 0;
+    for (let i = 1; i <= 10; i++) {
+        sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+    }
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cpf.substring(10, 11))) return false;
+
+    return true;
+}
+
+type Paciente = {
+    dataMensalidade: string,
+    pago: string,
+    mes: string,
+    ano: string,
+    valor: string,
+    visualizar: string,
+    cpfUsuarioLogado: string
+};
+
+export default function EditPacientePage() {
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -101,72 +111,68 @@ export default function NovoPaciente() {
         }
     })
 
-    const { reset } = useForm<z.infer<typeof formSchema>>();
-    const router = useRouter();
+    const { id } = useParams(); // Captura o parâmetro da rota  
+    const [ formData, setFormData ] = useState<Paciente | null>(null);
+
     const api = useAPI();
     const { toast } = useToast()
-    const { addPaciente } = usePacienteContext();
+    const router = useRouter();
 
-    async function onSubmit(data: z.infer<typeof formSchema>) {
+    const { reset } = form;
 
-        const dadosAjustados = {
-            ...data,
-            dataNascimento: `${data.dataNascimento}T00:00:00.000Z`,
-        };
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await api.get(`/paciente?id=${id}`);
+                const fetchedData = response.data;
 
-        try {
-            const response = await api.post("/paciente", dadosAjustados);
-            addPaciente(response.data)
+                console.log(response.data);
 
-            if (response.data) {
-                toast({
-                    duration: 3000,
-                    title: "Cadastro de Paciente",
-                    description: "Cadastro realizado com sucesso",
-                })
-            }
-            console.log("Cadastro realizado com sucesso", response.data);
-            router.push(`/private/pacientes?shouldUpdate=true`);
+                if (fetchedData) {
+                    const originalDate = new Date(fetchedData.dataNascimento);
 
-        } catch (error: any) {
-            if (error.response) {
-                // O servidor respondeu com um status diferente de 2xx                     
-                console.error('Erro ao cadastrar paciente: ', error.response.data.message);
-                toast({
-                    duration: 4000,
-                    variant: "destructive",
-                    title: "Erro ao cadastrar paciente",
-                    description: error.response.data.message,
-                })
-                // Exibir a mensagem de erro para o usuário 
-            } else if (error.request) {
-                // A requisição foi feita mas não houve resposta 
-                console.error('Erro ao cadastrar paciente. Sem resposta do servidor', error.request);
-                toast({
-                    duration: 4000,
-                    variant: "destructive",
-                    title: "Erro ao cadastrar paciente. Sem resposta do servidor",
-                    description: error.request,
-                })
-            } else {
-                // Algo aconteceu ao configurar a requisição c
-                console.error('Erro ao cadastrar paciente. Erro inesperado', error.message);
-                // Exibir uma mensagem de erro genérica 
+                    const adjustedDate = originalDate.toISOString().split("T")[ 0 ];
+
+                    // Prepara os dados para o formulário
+                    const formattedData = {
+                        nome: fetchedData.nome,
+                        dataNascimento: adjustedDate,
+                        situacao: fetchedData.situacao,
+                        cpf: fetchedData.cpf,
+                        contato1: fetchedData.contato1,
+                        contato2: fetchedData.contato2,
+                        endereco: fetchedData.endereco,
+                        profissao: fetchedData.profissao,
+                        email: fetchedData.email,
+                    };
+
+                    form.reset({
+                        nome: fetchedData.nome,
+                        dataNascimento: adjustedDate,
+                        situacao: formattedData.situacao,
+                        cpf: formattedData.cpf,
+                        contato1: formattedData.contato1,
+                        contato2: formattedData.contato2,
+                        endereco: formattedData.endereco,
+                        profissao: formattedData.profissao,
+                        email: formattedData.email,
+                    })
+                }
+            } catch (error) {
                 toast({
                     duration: 4000,
-                    variant: "destructive",
-                    title: "Erro ao cadastrar paciente. Erro inesperado",
-                    description: error.message,
-                })
+                    title: "Erro ao carregar dados do paciente",
+                    description: "Não foi possível carregar os dados do paciente.",
+                });
             }
         }
-    }
 
-    const handleCancelar = () => {
-        reset();
-        console.log("Cadastro cancelado.");
-        router.back(); // Volta para a página anterior
-    };
+        if (id) {
+            fetchData();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ id, reset, toast ]);
+
 
     const { data: session } = useSession();
 
@@ -178,11 +184,69 @@ export default function NovoPaciente() {
         );
     }
 
+    const handleCancelar = () => {
+        router.back(); // Volta para a página anterior
+    };
+
+    async function onSubmit(data: z.infer<typeof formSchema>) {
+        console.log(data)
+        const dadosAjustados = {
+            ...data,
+            dataNascimento: `${data.dataNascimento}T00:00:00.000Z`,
+        };
+
+        try {
+            const response = await api.put(`/paciente?id=${id}`, dadosAjustados);
+
+            if (response.data) {
+                toast({
+                    duration: 3000,
+                    title: "Alteração de cadastro de paciente",
+                    description: "Cadastro atualizado com sucesso",
+                })
+            }
+            console.log("Cadastro atualizado com sucesso", response.data);
+            router.push(`/private/pacientes?shouldUpdate=true`);
+
+        } catch (error: any) {
+            if (error.response) {
+                // O servidor respondeu com um status diferente de 2xx                     
+                console.error('Erro ao atualizar cadastro: ', error.response.data.message);
+                toast({
+                    duration: 4000,
+                    variant: "destructive",
+                    title: "Erro ao atualizar cadastro",
+                    description: error.response.data.message,
+                })
+                // Exibir a mensagem de erro para o usuário 
+            } else if (error.request) {
+                // A requisição foi feita mas não houve resposta 
+                console.error('Erro ao atualizar cadastro. Sem resposta do servidor', error.request);
+                toast({
+                    duration: 4000,
+                    variant: "destructive",
+                    title: "Erro ao atualizar cadastro. Sem resposta do servidor",
+                    description: error.request,
+                })
+            } else {
+                // Algo aconteceu ao configurar a requisição c
+                console.error('Erro ao atualizar cadastro. Erro inesperado', error.message);
+                // Exibir uma mensagem de erro genérica 
+                toast({
+                    duration: 4000,
+                    variant: "destructive",
+                    title: "Erro ao atualizar cadastro. Erro inesperado",
+                    description: error.message,
+                })
+            }
+        }
+    }
+    //disabled={true}
     return (
-        <div className="bg-slate-300 text-slate-900 w-9/12 h-auto flex justify-center items-start">
+        <div className="bg-slate-300 text-slate-900 w-full h-auto flex justify-center items-start">
             <div className="flex flex-col items-center bg-slate-300 w-full">
                 <h1 className="text-2xl font-bold mb-4">
-                    Cadastro de Paciente
+                    Alterar paciente
                 </h1>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -371,6 +435,7 @@ export default function NovoPaciente() {
                     </form>
                 </Form>
             </div>
-        </div>
+        </div >
     )
 }
+

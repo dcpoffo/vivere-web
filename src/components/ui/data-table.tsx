@@ -8,6 +8,8 @@ import {
     getSortedRowModel,
     SortingState,
     useReactTable,
+    ColumnFiltersState,
+    getFilteredRowModel,
 } from "@tanstack/react-table"
 
 import {
@@ -18,6 +20,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import { Input } from "@/components/ui/input"
 import { Button } from "./button"
 import { CircleArrowLeft, CircleArrowRight } from "lucide-react"
 import { useState } from "react"
@@ -26,14 +29,19 @@ interface DataTableProps<TData extends { id: string }, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     onRowClick?: (id: string) => void; // Adiciona um parâmetro para a função de clique na linha
+    showSearch?: boolean;
 }
 
 export function DataTable<TData extends { id: string }, TValue>({
     columns,
     data,
     onRowClick, // Recebe a função de clique na linha
+    showSearch = true,
 }: DataTableProps<TData, TValue>) {
     const [ sorting, setSorting ] = useState<SortingState>([]);
+    const [ columnFilters, setColumnFilters ] = useState<ColumnFiltersState>(
+        []
+    )
     const table = useReactTable({
         data,
         columns,
@@ -41,13 +49,31 @@ export function DataTable<TData extends { id: string }, TValue>({
         getPaginationRowModel: getPaginationRowModel(),
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
+        onColumnFiltersChange: setColumnFilters,
+        getFilteredRowModel: getFilteredRowModel(),
         state: {
             sorting,
+            columnFilters,
         },
     });
 
     return (
         <>
+            {/* Exibe o campo de pesquisa apenas quando showSearch for true */}
+            {showSearch && (
+                <div className="flex items-center pb-4">
+                    <Input
+                        placeholder="Filtrar pelo nome do paciente..."
+                        value={(table.getColumn("nome")?.getFilterValue() as string) ?? ""}
+                        onChange={(event) =>
+                            table.getColumn("nome")?.setFilterValue(event.target.value)
+                        }
+                        className="flex w-full border-gray-700"
+                    />
+                </div>
+            )}
+
+
             <div className="rounded-md border border-gray-700 w-full">
                 <Table>
                     <TableHeader>
@@ -95,6 +121,7 @@ export function DataTable<TData extends { id: string }, TValue>({
                 </Table>
             </div>
 
+
             <div className="flex items-center justify-end space-x-2 py-4">
                 <Button
                     variant="outline"
@@ -113,6 +140,7 @@ export function DataTable<TData extends { id: string }, TValue>({
                     <CircleArrowRight />
                 </Button>
             </div>
+
         </>
     );
 }
