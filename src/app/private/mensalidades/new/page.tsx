@@ -7,15 +7,15 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { useAPI } from "@/service/API";
-import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+
+import { useForm } from "react-hook-form";
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { usePacienteContext } from "@/context/PacienteContext";
+import { useToast } from "@/hooks/use-toast";
+import { useAPI } from "@/service/API";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import { format } from "date-fns";
 
@@ -47,22 +47,15 @@ const formSchema = z.object({
 
     valor: z
         .string()
-        .regex(/^\d+([,\.]\d{1,2})?$/, { message: "O valor deve estar no formato 1234,56 ou 1234.56" })
-        .transform((val) =>
-            parseFloat(val.replace(',', '.'))
-        )
+        .regex(/^\d+(,\d{1,2})?$/, { message: "O valor deve estar no formato 1234,56" })
+        .transform((val) => Number(val.replace(",", ".")))
         .refine((val) => val > 0, { message: "O valor deve ser maior que zero" })
 
 })
 
-export default function NovoAtendimento() {
+export default function NovaMensalidade() {
 
-    const { pacienteSelecionado } = usePacienteContext();
     const { data: session } = useSession();
-    const { reset } = useForm<z.infer<typeof formSchema>>();
-    const router = useRouter();
-    const api = useAPI();
-    const { toast } = useToast()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -73,9 +66,16 @@ export default function NovoAtendimento() {
             ano: new Date().getFullYear().toString(),
             valor: 0,
             visualizar: "SIM",
-            cpfUsuarioLogado: session?.user.cpf
+            cpfUsuarioLogado: session?.user.cpf || ""
         }
     })
+
+    const { pacienteSelecionado } = usePacienteContext();
+    const router = useRouter();
+    const api = useAPI();
+    const { toast } = useToast()
+    const { reset } = form;
+    // const { reset } = useForm<z.infer<typeof formSchema>>();
 
     function getMonthName(monthNumber: number): "JANEIRO" | "FEVEREIRO" | "MARÇO" | "ABRIL" | "MAIO" | "JUNHO" | "JULHO" | "AGOSTO" | "SETEMBRO" | "OUTUBRO" | "NOVEMBRO" | "DEZEMBRO" {
         const months = [ "JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO" ] as const;
@@ -114,7 +114,7 @@ export default function NovoAtendimento() {
 
         } catch (error: any) {
             if (error.response) {
-                // O servidor respondeu com um status diferente de 2xx                     
+                // O servidor respondeu com um status diferente de 2xx
                 console.error('Erro ao cadastrar mensalidade: ', error.response.data.message);
                 toast({
                     duration: 4000,
@@ -122,9 +122,9 @@ export default function NovoAtendimento() {
                     title: "Erro ao cadastrar mensalidade",
                     description: error.response.data.message,
                 })
-                // Exibir a mensagem de erro para o usuário 
+                // Exibir a mensagem de erro para o usuário
             } else if (error.request) {
-                // A requisição foi feita mas não houve resposta 
+                // A requisição foi feita mas não houve resposta
                 console.error('Erro ao cadastrar mensalidade. Sem resposta do servidor', error.request);
                 toast({
                     duration: 4000,
@@ -135,7 +135,7 @@ export default function NovoAtendimento() {
             } else {
                 // Algo aconteceu ao configurar a requisição c
                 console.error('Erro ao cadastrar mensalidade. Erro inesperado', error.message);
-                // Exibir uma mensagem de erro genérica 
+                // Exibir uma mensagem de erro genérica
                 toast({
                     duration: 4000,
                     variant: "destructive",
@@ -178,7 +178,8 @@ export default function NovoAtendimento() {
                                         <FormControl>
                                             <Input
                                                 {...field}
-                                                disabled={true}
+                                                // disabled={true}
+                                                readOnly
                                                 className="text-center w-full border p-2 bg-white text-black"
                                             />
                                         </FormControl>
@@ -199,6 +200,8 @@ export default function NovoAtendimento() {
                                             <Input
                                                 {...field}
                                                 type="number"
+                                                min="1900"
+                                                max="2099"
                                                 className="text-center w-full border p-2 bg-white text-black"
                                             />
                                         </FormControl>
@@ -243,7 +246,7 @@ export default function NovoAtendimento() {
                                                 <SelectContent>
                                                     <SelectItem value="JANEIRO">Janeiro</SelectItem>
                                                     <SelectItem value="FEVEREIRO">Fevereiro</SelectItem>
-                                                    <SelectItem value="MARCO">Março</SelectItem>
+                                                    <SelectItem value="MARÇO">Março</SelectItem>
                                                     <SelectItem value="ABRIL">Abril</SelectItem>
                                                     <SelectItem value="MAIO">Maio</SelectItem>
                                                     <SelectItem value="JUNHO">Junho</SelectItem>

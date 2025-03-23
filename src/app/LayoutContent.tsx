@@ -17,9 +17,10 @@ export default function LayoutContent({
 
     return (
         <main className="min-h-screen flex flex-col bg-slate-300">
+            {session && <Header />}
             {session && <Sidebar />}
             {/* <Sidebar /> */}
-            <div className="flex-grow overflow-auto flex justify-center items-center pt-5">
+            <div className="flex-grow overflow-auto flex justify-center items-start pt-5">
                 {children}
             </div>
             <Toaster />

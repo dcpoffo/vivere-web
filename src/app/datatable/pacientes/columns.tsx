@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { usePacienteContext } from "@/context/PacienteContext";
 import { ColumnDef } from "@tanstack/react-table";
 import { format, parseISO } from "date-fns";
-import { ArrowUpDown, Frown, Meh, Pencil, Smile, ThumbsDown, ThumbsDownIcon, ThumbsUp } from "lucide-react";
+import { ArrowUpDown, Frown, Meh, Pencil, PenOff, Smile, ThumbsDown, ThumbsDownIcon, ThumbsUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export type PacientesData = {
@@ -45,7 +45,11 @@ export const columns: ColumnDef<PacientesData>[] = [
                             disabled={pacienteSelecionado?.id != idPaciente}
                             onClick={() => router.push(`/private/pacientes/edit/${idPaciente}`)}
                         >
-                            <Pencil color="blue" size={16} />
+                            {pacienteSelecionado?.id === idPaciente
+                                ? (<Pencil color="green" size={16} />)
+                                : (<PenOff color="red" size={16} />)
+
+                            }
                         </Button>
 
                         <Button

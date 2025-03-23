@@ -14,6 +14,7 @@ import DeniedPage from "@/app/denied/page";
 import { useAPI } from "@/service/API";
 import { useToast } from "@/hooks/use-toast";
 import { usePacienteContext } from "@/context/PacienteContext";
+import { useState } from "react";
 
 function isValidCPF(cpf: string): boolean {
     cpf = cpf.replace(/[^\d]/g, ''); // Remove os caracteres não numéricos
@@ -85,6 +86,7 @@ const formSchema = z.object({
 })
 
 export default function NovoPaciente() {
+    const [ cpf, setCpf ] = useState('');
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -101,7 +103,7 @@ export default function NovoPaciente() {
         }
     })
 
-    const { reset } = useForm<z.infer<typeof formSchema>>();
+    const { reset } = form;
     const router = useRouter();
     const api = useAPI();
     const { toast } = useToast()
@@ -130,7 +132,7 @@ export default function NovoPaciente() {
 
         } catch (error: any) {
             if (error.response) {
-                // O servidor respondeu com um status diferente de 2xx                     
+                // O servidor respondeu com um status diferente de 2xx
                 console.error('Erro ao cadastrar paciente: ', error.response.data.message);
                 toast({
                     duration: 4000,
@@ -138,9 +140,9 @@ export default function NovoPaciente() {
                     title: "Erro ao cadastrar paciente",
                     description: error.response.data.message,
                 })
-                // Exibir a mensagem de erro para o usuário 
+                // Exibir a mensagem de erro para o usuário
             } else if (error.request) {
-                // A requisição foi feita mas não houve resposta 
+                // A requisição foi feita mas não houve resposta
                 console.error('Erro ao cadastrar paciente. Sem resposta do servidor', error.request);
                 toast({
                     duration: 4000,
@@ -151,7 +153,7 @@ export default function NovoPaciente() {
             } else {
                 // Algo aconteceu ao configurar a requisição c
                 console.error('Erro ao cadastrar paciente. Erro inesperado', error.message);
-                // Exibir uma mensagem de erro genérica 
+                // Exibir uma mensagem de erro genérica
                 toast({
                     duration: 4000,
                     variant: "destructive",
@@ -167,6 +169,25 @@ export default function NovoPaciente() {
         console.log("Cadastro cancelado.");
         router.back(); // Volta para a página anterior
     };
+
+    function gerarCPF() {
+        const random = (n: number) => Math.floor(Math.random() * n);
+
+        let n = 9; let n1 = random(n), n2 = random(n), n3 = random(n), n4 = random(n), n5 = random(n), n6 = random(n), n7 = random(n), n8 = random(n), n9 = random(n);
+
+        let d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;
+
+        d1 = 11 - (d1 % 11);
+
+        if (d1 >= 10)
+            d1 = 0;
+        let d2 = d1 * 2 + n9 * 3 + n8 * 4 + n7 * 5 + n6 * 6 + n5 * 7 + n4 * 8 + n3 * 9 + n2 * 10 + n1 * 11; d2 = 11 - (d2 % 11);
+
+        if (d2 >= 10)
+            d2 = 0;
+
+        return `${n1}${n2}${n3}.${n4}${n5}${n6}.${n7}${n8}${n9}-${d1}${d2}`;
+    }
 
     const { data: session } = useSession();
 
@@ -233,18 +254,40 @@ export default function NovoPaciente() {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="col-span-1 font-semibold">C.P.F.</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                placeholder="xxx.xxx.xxx-xx"
-                                                className="w-full border p-2 bg-white text-black"
-                                            />
-                                        </FormControl>
+                                        <div className="flex items-center justify-center gap-2">
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    placeholder="xxx.xxx.xxx-xx"
+                                                    className="w-full border p-2 bg-white text-black"
+
+                                                    value={cpf}
+                                                    onChange={(e) => {
+                                                        field.onChange(e);
+                                                        setCpf(e.target.value); // Atualiza o estado ao digitar
+                                                    }}
+
+                                                />
+                                            </FormControl>
+                                            <Button
+                                                type="button"
+                                                variant={"outline"}
+                                                className="bg-violet-500 text-white"
+                                                onClick={() => {
+                                                    const novoCPF = gerarCPF();
+                                                    setCpf(novoCPF);
+                                                    field.onChange(novoCPF);
+                                                }}
+                                            >
+                                                Gerar CPF
+                                            </Button>
+                                        </div>
                                         <FormDescription>Considerar o CPF com pontos e hífem (xxx.xxx.xxx-xx).</FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
+
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">

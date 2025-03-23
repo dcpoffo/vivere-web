@@ -85,7 +85,7 @@ export default function Pacientes() {
     }
 
     return (
-        <div className="flex flex-col justify-start items-center w-1/2">
+        <div className="flex flex-col justify-start items-center w-1/2 mt-16">
             <div className="flex gap-4 justify-end items-center">
                 <Link href="/private/pacientes/new">
                     <Button
@@ -102,25 +102,6 @@ export default function Pacientes() {
                     <RefreshCw size={18} /> {/* Ajuste o tamanho do ícone */}
                 </Button>
             </div>
-
-            {
-                !loading && (
-                    <>
-                        {/* <p className="my-4 ">
-                            Quantidade de pacientes cadastrados: {pacientes?.length ?? 0}
-                        </p> */}
-                        <div className="text-lg pt-4">
-                            {pacienteSelecionado ? (
-                                <p className="text-red-500">Paciente Selecionado: {pacienteSelecionado.nome}</p>
-                            ) : (
-                                <p className="text-red-500">Nenhum paciente selecionado.</p>
-                            )}
-                        </div>
-                    </>
-                )
-
-            }
-
 
             {
                 <div className="flex flex-col justify-center w-full container mx-auto mt-4">

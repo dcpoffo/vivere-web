@@ -100,21 +100,6 @@ export default function Mensalidades() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ pacienteSelecionado?.id ]);
 
-    // useEffect(() => {
-    //     const search = searchParams.get('shouldUpdate')
-    //     console.log(search);
-    //     if (search) {
-    //         atualizar().then(() => {
-    //             // Remover o parâmetro shouldUpdate da URL após a atualização
-    //             const newSearchParams = new URLSearchParams(searchParams);
-    //             newSearchParams.delete('shouldUpdate');
-    //             const newUrl = `${window.location.pathname}?${newSearchParams.toString()}`;
-    //             window.history.replaceState(null, '', newUrl);
-    //         });
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [ searchParams ]);
-
     useEffect(() => {
         const search = searchParams.get("shouldUpdate");
         setShouldUpdate(search);
@@ -149,7 +134,7 @@ export default function Mensalidades() {
     }
 
     return (
-        <div className="flex flex-col justify-start items-center w-full">
+        <div className="flex flex-col justify-start items-center w-full mt-16">
             <div className="flex gap-4 justify-end items-center">
                 <Link href="/private/mensalidades/new">
                     <Button
@@ -167,16 +152,6 @@ export default function Mensalidades() {
                 </Button>
             </div>
 
-            {/* Quantidade de atendimentos */}
-            {
-                !loading && (
-                    <p className="mt-4 text-gray-700">
-                        Quantidade de mensalidades geradas para
-                        <span className="font-bold"> {pacienteSelecionado?.nome}</span>
-                        : {mensalidades?.length ?? 0}
-                    </p>
-                )
-            }
 
             {loading && <p>Carregando mensalidades...</p>}
 

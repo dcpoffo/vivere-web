@@ -51,9 +51,6 @@ const config = {
         signIn: "/login",
         signOut: "/login",
     },
-    session: {
-        strategy: "jwt",
-    },
     cookies: {
         sessionToken: {
             name: "next-auth.session-token",
@@ -66,6 +63,9 @@ const config = {
                 expires: undefined,
             },
         },
+    },
+    session: {
+        strategy: "jwt",
     },
     callbacks: {
         jwt: ({ token, user }) => {

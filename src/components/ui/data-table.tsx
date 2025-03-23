@@ -123,8 +123,13 @@ export function DataTable<TData extends { id: string }, TValue>({
 
 
             <div className="flex items-center justify-end space-x-2 py-4">
+                <span className="text-sm text-black ">
+                    <strong>Total de registros cadastrados: {table.getFilteredRowModel().rows.length}</strong>
+                </span>
+
                 <Button
-                    variant="outline"
+                    className="bg-slate-300 hover:bg-slate-400"
+                    variant="ghost"
                     size="sm"
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
@@ -132,8 +137,10 @@ export function DataTable<TData extends { id: string }, TValue>({
                     <CircleArrowLeft />
                 </Button>
                 <Button
-                    variant="outline"
+                    className="bg-slate-300 hover:bg-slate-400"
+                    variant="ghost"
                     size="sm"
+
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                 >

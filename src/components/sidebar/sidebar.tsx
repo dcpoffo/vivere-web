@@ -56,8 +56,8 @@ export function Sidebar() {
                 <nav className="flex flex-col gap-4 p-6 mt-10">
                     {[
                         { label: "Home", icon: Users, path: "/" },
-                        { label: "Pacientes", icon: Users, path: "/private/pacientes" },
-                        { label: "Ficha de Avaliações", icon: FileText, path: "/private/fichaAvaliacoes" },
+                        { label: "Cadastro", icon: Users, path: `/private/pacientes/edit/${pacienteSelecionado?.id}` },
+                        { label: "Ficha de Avaliações", icon: FileText, path: "/private/avaliacoes" },
                         { label: "Fotos de Acompanhamento", icon: Camera, path: "/private/fotos" },
                         { label: "Mensalidades", icon: DollarSign, path: "/private/mensalidades" },
                         { label: "Exames Complementares", icon: File, path: "/private/exames" },
@@ -70,7 +70,7 @@ export function Sidebar() {
                             onClick={isItemDisabled(path) ? undefined : handleCloseSidebar}
                         >
                             <div
-                                className={`flex items-center gap-3 p-2 rounded-md ${isItemDisabled(path) ? "bg-gray-300 cursor-not-allowed" : "bg-sky-600 hover:bg-sky-500"
+                                className={`flex items-center gap-3 p-2 rounded-md ${isItemDisabled(path) ? "bg-gray-300 cursor-not-allowed" : "bg-slate-400 hover:bg-slate-500"
                                     }`}
                             >
                                 <Icon size={20} />

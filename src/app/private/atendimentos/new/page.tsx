@@ -51,7 +51,7 @@ export default function NovoAtendimento() {
     })
 
     const { data: session } = useSession();
-    const { reset } = useForm<z.infer<typeof formSchema>>();
+    const { reset } = form;
     const router = useRouter();
     const api = useAPI();
     const { toast } = useToast()
@@ -85,7 +85,7 @@ export default function NovoAtendimento() {
 
         } catch (error: any) {
             if (error.response) {
-                // O servidor respondeu com um status diferente de 2xx                     
+                // O servidor respondeu com um status diferente de 2xx
                 console.error('Erro ao cadastrar atendimento: ', error.response.data.message);
                 toast({
                     duration: 4000,
@@ -93,9 +93,9 @@ export default function NovoAtendimento() {
                     title: "Erro ao cadastrar atendimento",
                     description: error.response.data.message,
                 })
-                // Exibir a mensagem de erro para o usuário 
+                // Exibir a mensagem de erro para o usuário
             } else if (error.request) {
-                // A requisição foi feita mas não houve resposta 
+                // A requisição foi feita mas não houve resposta
                 console.error('Erro ao cadastrar atendimento. Sem resposta do servidor', error.request);
                 toast({
                     duration: 4000,
@@ -106,7 +106,7 @@ export default function NovoAtendimento() {
             } else {
                 // Algo aconteceu ao configurar a requisição c
                 console.error('Erro ao cadastrar atendimento. Erro inesperado', error.message);
-                // Exibir uma mensagem de erro genérica 
+                // Exibir uma mensagem de erro genérica
                 toast({
                     duration: 4000,
                     variant: "destructive",

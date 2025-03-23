@@ -22,7 +22,7 @@ export const columns: ColumnDef<MensalidadesData>[] = [
     {
         accessorKey: "actions",
         header: () => (
-            <div className="text-center"></div> // Alinhamento à esquerda para o cabeçalho 
+            <div >Alterar</div> // Alinhamento à esquerda para o cabeçalho 
         ),
         cell: ({ row }) => {
             // eslint-disable-next-line react-hooks/rules-of-hooks
