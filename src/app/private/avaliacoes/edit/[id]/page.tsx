@@ -300,13 +300,10 @@ export default function EditAvaliacoesPage() {
 
     return (
         <>
-            <div className="bg-slate-300 text-slate-900 w-full h-auto flex justify-center items-start">
-                <div className="flex flex-col items-center bg-slate-300 w-11/12">
-                    <h1 className="text-2xl font-bold mb-4">
-                        Alterar Ficha de Avaliação
-                    </h1>
+            <div className="text-slate-900 w-full h-auto flex justify-center items-start mt-16">
+                <div className="flex flex-col items-center w-11/12">
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 w-full">
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 w-full mt-2">
 
                             <Tabs defaultValue="anamnese" className=" flex flex-col justify-center w-full">
                                 <TabsList className="justify-start">

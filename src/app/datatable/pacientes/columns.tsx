@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { usePacienteContext } from "@/context/PacienteContext";
 import { ColumnDef } from "@tanstack/react-table";
 import { format, parseISO } from "date-fns";
-import { ArrowUpDown, Frown, Meh, Pencil, PenOff, Smile, ThumbsDown, ThumbsDownIcon, ThumbsUp } from "lucide-react";
+import { ArrowUpDown, Frown, Meh, Pencil, PenOff, Pointer, PointerOff, Smile, ThumbsDown, ThumbsDownIcon, ThumbsUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export type PacientesData = {
@@ -25,7 +25,7 @@ export const columns: ColumnDef<PacientesData>[] = [
     {
         accessorKey: "actions",
         header: () => (
-            <div className="text-center">Alterar/Selecionar</div> // Alinhamento à esquerda para o cabeçalho
+            <div className="text-center text-black">Alterar/Selecionar</div> // Alinhamento à esquerda para o cabeçalho
         ),
         cell: ({ row }) => {
 
@@ -64,9 +64,9 @@ export const columns: ColumnDef<PacientesData>[] = [
                             }}
                         >
                             {pacienteSelecionado?.id != idPaciente ? (
-                                <ThumbsDown color="red" size={16} /> // Ícone se o paciente está selecionado
+                                <PointerOff color="red" size={16} /> // Ícone se o paciente está selecionado
                             ) : (
-                                <ThumbsUp color="green" size={16} /> // Ícone se o paciente não está selecionado
+                                <Pointer color="green" size={16} /> // Ícone se o paciente não está selecionado
                             )}
                         </Button>
                     </div>
@@ -81,6 +81,7 @@ export const columns: ColumnDef<PacientesData>[] = [
             return (
                 <Button
                     variant="ghost"
+                    className="text-black"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     <div>Id</div>
@@ -91,7 +92,7 @@ export const columns: ColumnDef<PacientesData>[] = [
         cell: (cell) => {
             const value = cell.getValue<string>()
             return (
-                <div className="flex justify-center w-16">{value}</div> // Alinhamento à esquerda para o cabeçalho 
+                <div className="flex justify-center w-16">{value}</div> // Alinhamento à esquerda para o cabeçalho
             )
         }
     },
@@ -101,9 +102,10 @@ export const columns: ColumnDef<PacientesData>[] = [
             return (
                 <Button
                     variant="ghost"
+                    className="text-black"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    <div className="text-center">Nome</div>
+                    <div className="text-center ">Nome</div>
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             );
@@ -112,13 +114,13 @@ export const columns: ColumnDef<PacientesData>[] = [
     {
         accessorKey: "situacao",
         header: () => (
-            <div className="text-center">Situação</div> // Alinhamento à esquerda para o cabeçalho 
+            <div className="text-center text-black">Situação</div> // Alinhamento à esquerda para o cabeçalho
         ),
         cell: ({ cell, column }) => {
             const value = cell.getValue<string>()
             return (
                 <div className="flex justify-center items-center">
-                    {value === "ATIVO" ? <Smile color="green" /> : <Meh color="red" />}
+                    {value === "ATIVO" ? <ThumbsUp color="green" /> : <ThumbsDown color="red" />}
                 </div>
             )
         }

@@ -111,7 +111,7 @@ export default function EditPacientePage() {
         }
     })
 
-    const { id } = useParams(); // Captura o parâmetro da rota  
+    const { id } = useParams(); // Captura o parâmetro da rota
     const [ formData, setFormData ] = useState<Paciente | null>(null);
 
     const api = useAPI();
@@ -210,7 +210,7 @@ export default function EditPacientePage() {
 
         } catch (error: any) {
             if (error.response) {
-                // O servidor respondeu com um status diferente de 2xx                     
+                // O servidor respondeu com um status diferente de 2xx
                 console.error('Erro ao atualizar cadastro: ', error.response.data.message);
                 toast({
                     duration: 4000,
@@ -218,9 +218,9 @@ export default function EditPacientePage() {
                     title: "Erro ao atualizar cadastro",
                     description: error.response.data.message,
                 })
-                // Exibir a mensagem de erro para o usuário 
+                // Exibir a mensagem de erro para o usuário
             } else if (error.request) {
-                // A requisição foi feita mas não houve resposta 
+                // A requisição foi feita mas não houve resposta
                 console.error('Erro ao atualizar cadastro. Sem resposta do servidor', error.request);
                 toast({
                     duration: 4000,
@@ -231,7 +231,7 @@ export default function EditPacientePage() {
             } else {
                 // Algo aconteceu ao configurar a requisição c
                 console.error('Erro ao atualizar cadastro. Erro inesperado', error.message);
-                // Exibir uma mensagem de erro genérica 
+                // Exibir uma mensagem de erro genérica
                 toast({
                     duration: 4000,
                     variant: "destructive",
@@ -243,13 +243,10 @@ export default function EditPacientePage() {
     }
     //disabled={true}
     return (
-        <div className="bg-slate-300 text-slate-900 w-full h-auto flex justify-center items-start">
-            <div className="flex flex-col items-center bg-slate-300 w-full">
-                <h1 className="text-2xl font-bold mb-4">
-                    Alterar paciente
-                </h1>
+        <div className="text-slate-900 w-full h-auto flex justify-center items-start mt-16">
+            <div className="flex flex-col items-center w-full">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="mt-2">
                         <FormField
                             control={form.control}
                             name="nome"

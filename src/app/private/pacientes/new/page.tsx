@@ -200,9 +200,9 @@ export default function NovoPaciente() {
     }
 
     return (
-        <div className="bg-slate-300 text-slate-900 w-9/12 h-auto flex justify-center items-start">
-            <div className="flex flex-col items-center bg-slate-300 w-full">
-                <h1 className="text-2xl font-bold mb-4">
+        <div className="text-slate-900 w-9/12 h-auto flex justify-center items-start mt-16">
+            <div className="flex flex-col items-center w-full">
+                <h1 className="text-2xl font-bold mt-1">
                     Cadastro de Paciente
                 </h1>
                 <Form {...form}>
@@ -272,7 +272,7 @@ export default function NovoPaciente() {
                                             <Button
                                                 type="button"
                                                 variant={"outline"}
-                                                className="bg-violet-500 text-white"
+                                                className="bg-roxoEscuro hover:bg-roxoClaro text-white"
                                                 onClick={() => {
                                                     const novoCPF = gerarCPF();
                                                     setCpf(novoCPF);
@@ -282,7 +282,9 @@ export default function NovoPaciente() {
                                                 Gerar CPF
                                             </Button>
                                         </div>
-                                        <FormDescription>Considerar o CPF com pontos e hífem (xxx.xxx.xxx-xx).</FormDescription>
+                                        <FormDescription
+                                            className="text-black"
+                                        >Considerar o CPF com pontos e hífem (xxx.xxx.xxx-xx).</FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}

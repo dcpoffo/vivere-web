@@ -50,7 +50,7 @@ export default function EditAtendimentoPage() {
         }
     })
 
-    const { id } = useParams(); // Captura o parâmetro da rota  
+    const { id } = useParams(); // Captura o parâmetro da rota
     const [ formData, setFormData ] = useState<Atendimento | null>(null);
 
     const api = useAPI();
@@ -138,7 +138,7 @@ export default function EditAtendimentoPage() {
 
         } catch (error: any) {
             if (error.response) {
-                // O servidor respondeu com um status diferente de 2xx                     
+                // O servidor respondeu com um status diferente de 2xx
                 console.error('Erro ao atualizar atendimento: ', error.response.data.message);
                 toast({
                     duration: 4000,
@@ -146,9 +146,9 @@ export default function EditAtendimentoPage() {
                     title: "Erro ao atualizar atendimento",
                     description: error.response.data.message,
                 })
-                // Exibir a mensagem de erro para o usuário 
+                // Exibir a mensagem de erro para o usuário
             } else if (error.request) {
-                // A requisição foi feita mas não houve resposta 
+                // A requisição foi feita mas não houve resposta
                 console.error('Erro ao atualizar atendimento. Sem resposta do servidor', error.request);
                 toast({
                     duration: 4000,
@@ -159,7 +159,7 @@ export default function EditAtendimentoPage() {
             } else {
                 // Algo aconteceu ao configurar a requisição c
                 console.error('Erro ao atualizar atendimento. Erro inesperado', error.message);
-                // Exibir uma mensagem de erro genérica 
+                // Exibir uma mensagem de erro genérica
                 toast({
                     duration: 4000,
                     variant: "destructive",
@@ -171,13 +171,10 @@ export default function EditAtendimentoPage() {
     }
 
     return (
-        <div className="bg-slate-300 text-slate-900 w-full h-auto flex justify-center items-start">
-            <div className="flex flex-col items-center bg-slate-300 w-full">
-                <h1 className="text-2xl font-bold mb-4">
-                    Alterar Atendimento
-                </h1>
+        <div className="text-slate-900 w-full h-auto flex justify-center items-start mt-16">
+            <div className="flex flex-col items-center w-full">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 w-1/2">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 w-1/2 mt-2">
                         <div className="grid grid-cols-[1fr,2fr,2fr] gap-4">
                             <FormField
                                 control={form.control}

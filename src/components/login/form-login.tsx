@@ -56,14 +56,14 @@ const LoginForm = () => {
 
     return (
         // <div className="w-full flex-grow flex items-center justify-center">
-        <div className="w-full h-screen flex flex-col justify-center items-center">
+        <div className="w-full h-screen flex flex-col justify-center items-center bg-nubank">
 
             <form
                 onSubmit={handleLogin}
-                className="p-10 border border-blue-500 rounded-lg w-96"
+                className="p-10 border border-roxoClaro rounded-lg w-96"
             >
                 <h1 className="text-3xl font-bold mb-4">Vivere Pilates</h1>
-                <p className="text-lg text-slate-700 mb-10">Faça login para continuar</p>
+                <p className="text-lg text-black mb-10">Faça login para continuar</p>
                 <div className="flex flex-col">
                     <div className="flex flex-col gap-1 mb-6">
                         <label htmlFor="email">E-mail</label>
@@ -72,7 +72,7 @@ const LoginForm = () => {
                             type="text"
                             name="email"
                             onChange={(e) => setEmail(e.target.value)}
-                            className="border rounded-sm w-full p-3 bg-slate-200"
+                            className="border rounded-sm w-full p-3 bg-slate-300"
                         />
                     </div>
 
@@ -82,12 +82,12 @@ const LoginForm = () => {
                             type="password"
                             name="password"
                             onChange={(e) => setPassword(e.target.value)}
-                            className="border rounded-sm w-full p-3 bg-slate-200"
+                            className="border rounded-sm w-full p-3 bg-slate-300"
                         />
                     </div>
                     {error && <span className="text-red-500 text-sm font-bold block mt-2">{error}</span>}
                     <Button
-                        className="mt-4 rounded-sm h-12 text-lg"
+                        className="mt-4 rounded-sm h-12 text-lg bg-roxoEscuro hover:bg-roxoClaro"
                         type="submit"
                     >
                         Entrar

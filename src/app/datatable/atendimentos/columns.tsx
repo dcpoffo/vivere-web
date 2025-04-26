@@ -18,7 +18,7 @@ export const columns: ColumnDef<AtendimentosData>[] = [
     {
         accessorKey: "actions",
         header: () => (
-            <div>Arterar</div> // Alinhamento à esquerda para o cabeçalho 
+            <div>Alterar</div> // Alinhamento à esquerda para o cabeçalho
         ),
         cell: ({ row }) => {
             // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -38,7 +38,7 @@ export const columns: ColumnDef<AtendimentosData>[] = [
     {
         accessorKey: "id",
         header: () => (
-            <div className="text-center">Id</div> // Alinhamento à esquerda para o cabeçalho 
+            <div className="text-center">Id</div> // Alinhamento à esquerda para o cabeçalho
         ),
     },
     {
@@ -71,7 +71,7 @@ export const columns: ColumnDef<AtendimentosData>[] = [
         accessorKey: "observacao",
         header: "Observação",
         cell: ({ cell }) => (
-            <div className="text-left">{cell.getValue<string>()}</div> // Alinhamento à esquerda 
+            <div className="text-left">{cell.getValue<string>()}</div> // Alinhamento à esquerda
         ),
     },
     {

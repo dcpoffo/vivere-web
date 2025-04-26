@@ -16,11 +16,11 @@ export default function LayoutContent({
     const { pacienteSelecionado } = usePacienteContext();
 
     return (
-        <main className="min-h-screen flex flex-col bg-slate-300">
+        <main className="min-h-screen flex flex-col bg-nubank">
             {session && <Header />}
             {session && <Sidebar />}
             {/* <Sidebar /> */}
-            <div className="flex-grow overflow-auto flex justify-center items-start pt-5">
+            <div className="flex-grow overflow-auto flex justify-center items-start">
                 {children}
             </div>
             <Toaster />

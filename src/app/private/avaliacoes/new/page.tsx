@@ -259,19 +259,19 @@ export default function NovaAvaliacao() {
 
     return (
         <>
-            <div className="bg-slate-300 text-slate-900 w-full h-auto flex justify-center items-start">
-                <div className="flex flex-col items-center bg-slate-300 w-11/12">
-                    <h1 className="text-2xl font-bold mb-4">
-                        Nova avaliação
+            <div className="text-slate-900 w-full h-auto flex justify-center items-start mt-16">
+                <div className="flex flex-col items-center w-11/12">
+                    <h1 className="text-2xl font-bold mt-1">
+                        Nova Avaliação
                     </h1>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 w-full">
 
                             <Tabs defaultValue="anamnese" className=" flex flex-col justify-center w-full">
 
-                                <TabsList className="justify-start">
-                                    <TabsTrigger value="anamnese">Anamnese</TabsTrigger>
-                                    <TabsTrigger value="simetriaCorporal">Simetria Corporal</TabsTrigger>
+                                <TabsList className="justify-start mt-2">
+                                    <TabsTrigger value="anamnese" className="font-bold">Anamnese</TabsTrigger>
+                                    <TabsTrigger value="simetriaCorporal" className="font-bold">Simetria Corporal</TabsTrigger>
                                 </TabsList>
 
                                 <TabsContent value="anamnese">

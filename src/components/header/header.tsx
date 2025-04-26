@@ -14,28 +14,29 @@ export function Header() {
     const { pacienteSelecionado } = usePacienteContext();
 
     return (
-        <header className="fixed w-full h-16 flex items-center bg-slate-400 text-slate-900 px-4">
+        <header className="shadow-sm fixed w-full h-16 flex items-center bg-nubank text-slate-900 px-4">
             {/* Centro do header */}
             <div className="flex w-full justify-center items-center space-x-2">
                 {pacienteSelecionado ? (
-                    <p className="text-black-500">Paciente: {pacienteSelecionado.nome}</p>
-                ) : (
-                    <p className="text-red-500">Nenhum paciente selecionado.</p>
-                )}
-                <Link href="/private/pacientes">
-                    <Button
-                        type="button"
-                        className="px-4 py-2 h-12 bg-blue-600 text-white rounded-md hover:bg-blue-500 flex items-center justify-center"
+                    <p
+                        className="text-black-500"
                     >
-                        <Search size={16} />
-                    </Button>
-                </Link>
+                        <Link href="/private/pacientes" className="hover:underline">
+                            {pacienteSelecionado.nome}
+                        </Link>
+                    </p>
+                ) : (
+                    // <p className="text-red-500">Nenhum paciente selecionado. Clique para selecionar</p>
+                    <p className="text-black">
+                        <Link href="/private/pacientes" className="hover:underline">Clique para selecionar o paciente.</Link>
+                    </p>
+                )}
             </div>
 
             {/* Botão de sair */}
             <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
-                className="absolute right-4 flex items-center justify-center gap-2 p-2 bg-red-600 text-white rounded-md hover:bg-red-500"
+                className="absolute right-4 flex items-center justify-center gap-2 p-2 bg-roxoEscuro text-white rounded-md hover:bg-roxoClaro"
             >
                 <X size={20} /> Sair
             </button>

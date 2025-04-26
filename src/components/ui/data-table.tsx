@@ -68,20 +68,20 @@ export function DataTable<TData extends { id: string }, TValue>({
                         onChange={(event) =>
                             table.getColumn("nome")?.setFilterValue(event.target.value)
                         }
-                        className="flex w-full border-gray-700"
+                        className="flex w-full border-roxoEscuro text-black bg-slate-300"
                     />
                 </div>
             )}
 
 
-            <div className="rounded-md border border-gray-700 w-full">
+            <div className="border w-full">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
+                            <TableRow key={headerGroup.id} >
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id}>
+                                        <TableHead key={header.id} className="text-black">
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -124,11 +124,11 @@ export function DataTable<TData extends { id: string }, TValue>({
 
             <div className="flex items-center justify-end space-x-2 py-4">
                 <span className="text-sm text-black ">
-                    <strong>Total de registros cadastrados: {table.getFilteredRowModel().rows.length}</strong>
+                    <strong>Total de registros: {table.getFilteredRowModel().rows.length}</strong>
                 </span>
 
                 <Button
-                    className="bg-slate-300 hover:bg-slate-400"
+                    className="bbg-nubank hover:bg-roxoEscuro"
                     variant="ghost"
                     size="sm"
                     onClick={() => table.previousPage()}
@@ -137,7 +137,7 @@ export function DataTable<TData extends { id: string }, TValue>({
                     <CircleArrowLeft />
                 </Button>
                 <Button
-                    className="bg-slate-300 hover:bg-slate-400"
+                    className="bg-nubank hover:bg-roxoEscuro"
                     variant="ghost"
                     size="sm"
 

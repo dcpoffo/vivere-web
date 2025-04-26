@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React, { useState } from "react";
-import { X, Users, FileText, Camera, DollarSign, File, Activity, Crosshair, MenuIcon } from "lucide-react";
+import { X, Users, FileText, Camera, DollarSign, File, Activity, Crosshair, MenuIcon, Stethoscope } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { usePacienteContext } from "@/context/PacienteContext";
 
@@ -33,7 +33,7 @@ export function Sidebar() {
             {!isOpen && (
                 <button
                     onClick={handleToggleSidebar}
-                    className="fixed top-4 left-4 bg-blue-600 text-white p-2 rounded-md z-50 hover:bg-blue-500"
+                    className="fixed top-4 left-4 bg-roxoEscuro text-white p-2 rounded-md z-50 hover:bg-roxoClaro"
                 >
                     <MenuIcon size={20} />
                 </button>
@@ -41,13 +41,13 @@ export function Sidebar() {
 
             {/* Sidebar */}
             <div
-                className={`fixed top-0 left-0 h-full w-64 bg-slate-400 shadow-lg transform ${isOpen ? "translate-x-0" : "-translate-x-full"
+                className={`fixed top-0 left-0 h-full w-64 bg-nubank shadow-lg transform ${isOpen ? "translate-x-0" : "-translate-x-full"
                     } transition-transform duration-300 z-40`}
             >
                 {/* Botão de fechar */}
                 <button
                     onClick={handleCloseSidebar}
-                    className="absolute top-4 right-4 bg-red-600 text-white p-1 rounded-full hover:bg-red-500 border border-red-700"
+                    className="absolute top-4 right-4 bg-roxoEscuro text-white p-1 rounded-full hover:bg-roxoClaro border border-roxoEscuro"
                 >
                     <X size={20} />
                 </button>
@@ -60,7 +60,7 @@ export function Sidebar() {
                         { label: "Ficha de Avaliações", icon: FileText, path: "/private/avaliacoes" },
                         { label: "Fotos de Acompanhamento", icon: Camera, path: "/private/fotos" },
                         { label: "Mensalidades", icon: DollarSign, path: "/private/mensalidades" },
-                        { label: "Exames Complementares", icon: File, path: "/private/exames" },
+                        { label: "Exames Complementares", icon: Stethoscope, path: "/private/exames" },
                         { label: "Atendimentos", icon: Activity, path: "/private/atendimentos" },
                         { label: "Osteopatia", icon: Crosshair, path: "/private/osteopatia" },
                     ].map(({ label, icon: Icon, path }) => (
@@ -70,7 +70,7 @@ export function Sidebar() {
                             onClick={isItemDisabled(path) ? undefined : handleCloseSidebar}
                         >
                             <div
-                                className={`flex items-center gap-3 p-2 rounded-md ${isItemDisabled(path) ? "bg-gray-300 cursor-not-allowed" : "bg-slate-400 hover:bg-slate-500"
+                                className={`flex items-center gap-3 p-2 rounded-md ${isItemDisabled(path) ? "bg-gray-500 cursor-not-allowed" : "bg-roxoClaro hover:bg-roxoEscuro"
                                     }`}
                             >
                                 <Icon size={20} />
@@ -84,7 +84,7 @@ export function Sidebar() {
                 <div className="absolute bottom-4 left-0 w-full px-6">
                     <button
                         onClick={() => signOut({ callbackUrl: "/login" })}
-                        className="w-full flex items-center justify-center gap-2 p-2 bg-red-600 text-white rounded-md hover:bg-red-500"
+                        className="w-full flex items-center justify-center gap-2 p-2 bg-roxoEscuro text-white rounded-md hover:bg-roxoClaro"
                     >
                         <X size={20} /> Sair
                     </button>

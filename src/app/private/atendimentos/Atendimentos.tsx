@@ -104,6 +104,10 @@ export default function Atendimentos() {
         }
     };
 
+    const handleNovo = () => {
+        router.push("/private/atendimentos/new"); // Volta para a página anterior
+    };
+
     if (!session || !session.user) {
         return (
             <div className="flex flex-col items-center justify-center h-screen">
@@ -114,20 +118,21 @@ export default function Atendimentos() {
 
     return (
         <div className="flex flex-col justify-start items-center w-full mt-16">
-            <div className="flex gap-4 justify-end items-center">
-                <Link href="/private/atendimentos/new">
-                    <Button
-                        type="button"
-                        className="px-4 py-2 h-12 bg-blue-600 text-white rounded-md hover:bg-blue-500 flex items-center justify-center"
-                    >
-                        <Plus size={18} /> {/* Ajuste o tamanho do ícone */}
-                    </Button>
-                </Link>
+            <div className="flex gap-4 justify-end items-center my-4">
                 <Button
-                    onClick={handleAtualizar}
-                    className="px-4 py-2 h-12 bg-blue-600 text-white rounded-md hover:bg-blue-500 flex items-center justify-center"
+                    type="button"
+                    className="flex items-center justify-center bg-roxoEscuro hover:bg-roxoClaro w-32"
+                    onClick={handleNovo}
                 >
-                    <RefreshCw size={18} /> {/* Ajuste o tamanho do ícone */}
+                    Novo
+                </Button>
+
+                <Button
+                    type="button"
+                    className="flex items-center justify-center bg-roxoEscuro hover:bg-roxoClaro w-32"
+                    onClick={handleAtualizar}
+                >
+                    Atualizar
                 </Button>
             </div>
 
@@ -143,7 +148,7 @@ export default function Atendimentos() {
 
             {
                 !loading && atendimentos.length > 0 && (
-                    <div className="flex flex-col justify-center w-full container mx-auto mt-4">
+                    <div className="flex flex-col justify-center w-full container mx-auto">
                         <DataTable columns={columns} data={atendimentos} showSearch={false} />
                     </div>
                 )

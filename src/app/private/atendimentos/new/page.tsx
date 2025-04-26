@@ -132,9 +132,9 @@ export default function NovoAtendimento() {
     }
 
     return (
-        <div className="bg-slate-300 text-slate-900 w-full h-auto flex justify-center items-start">
-            <div className="flex flex-col items-center bg-slate-300 w-full">
-                <h1 className="text-2xl font-bold mb-4">
+        <div className="text-slate-900 w-full h-auto flex justify-center items-start mt-16">
+            <div className="flex flex-col items-center w-full">
+                <h1 className="text-2xl font-bold mt-1">
                     Novo Atendimento
                 </h1>
                 <Form {...form}>

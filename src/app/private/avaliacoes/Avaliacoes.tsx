@@ -39,6 +39,10 @@ export default function Avaliacoes() {
         }
     }
 
+    const handleNovo = () => {
+        router.push("/private/avaliacoes/new"); // Volta para a página anterior
+    };
+
     const fetchAvaliacoes = async () => {
         if (!pacienteSelecionado?.id) return;
 
@@ -105,20 +109,21 @@ export default function Avaliacoes() {
 
     return (
         <div className="flex flex-col justify-start items-center w-1/2 mt-16">
-            <div className="flex gap-4 justify-end items-center">
-                <Link href="/private/avaliacoes/new">
-                    <Button
-                        type="button"
-                        className="px-4 py-2 h-12 bg-blue-600 text-white rounded-md hover:bg-blue-500 flex items-center justify-center"
-                    >
-                        <Plus size={18} /> {/* Ajuste o tamanho do ícone */}
-                    </Button>
-                </Link>
+            <div className="flex gap-4 justify-between items-center my-4 w-1/3">
                 <Button
-                    onClick={handleAtualizar}
-                    className="px-4 py-2 h-12 bg-blue-600 text-white rounded-md hover:bg-blue-500 flex items-center justify-center"
+                    type="button"
+                    className="flex items-center justify-center bg-roxoEscuro hover:bg-roxoClaro w-full"
+                    onClick={handleNovo}
                 >
-                    <RefreshCw size={18} /> {/* Ajuste o tamanho do ícone */}
+                    Novo
+                </Button>
+
+                <Button
+                    type="button"
+                    className="flex items-center justify-center bg-roxoEscuro hover:bg-roxoClaro w-full"
+                    onClick={handleAtualizar}
+                >
+                    Atualizar
                 </Button>
             </div>
 
@@ -134,7 +139,7 @@ export default function Avaliacoes() {
 
             {
                 !loading && avaliacoes.length > 0 && (
-                    <div className="flex flex-col justify-center w-full container mx-auto mt-4">
+                    <div className="flex flex-col justify-center w-full container mx-auto">
                         <DataTable columns={columns} data={avaliacoes} showSearch={false} />
                     </div>
                 )

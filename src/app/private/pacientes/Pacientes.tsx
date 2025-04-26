@@ -9,7 +9,7 @@ import { useAPI } from "@/service/API";
 import { Plus, RefreshCw } from "lucide-react"
 import { useSession } from "next-auth/react";
 import Link from "next/link"
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Pacientes() {
@@ -22,9 +22,9 @@ export default function Pacientes() {
 
     const [ pacientes, setPacientes ] = useState<PacientesData[]>([]); // Inicializado como array vazio
 
-
     const { data: session } = useSession();
     const api = useAPI();
+    const router = useRouter();
 
     const fetchPacientes = async () => {
         setLoading(true);
@@ -41,6 +41,8 @@ export default function Pacientes() {
     };
 
     const handleRowClick = (id: string) => {
+        console.log(id)
+        //pacienteSelecionado?.id == id
     };
 
     useEffect(() => {
@@ -76,6 +78,11 @@ export default function Pacientes() {
         console.log('atualizar')
     };
 
+    const handleNovo = () => {
+        router.push("/private/pacientes/new"); // Volta para a página anterior
+    };
+
+
     if (!session || !session.user) {
         return (
             <div className="flex flex-col items-center justify-center h-screen">
@@ -86,25 +93,26 @@ export default function Pacientes() {
 
     return (
         <div className="flex flex-col justify-start items-center w-1/2 mt-16">
-            <div className="flex gap-4 justify-end items-center">
-                <Link href="/private/pacientes/new">
-                    <Button
-                        type="button"
-                        className="px-4 py-2 h-12 bg-blue-600 text-white rounded-md hover:bg-blue-500 flex items-center justify-center"
-                    >
-                        <Plus size={18} /> {/* Ajuste o tamanho do ícone */}
-                    </Button>
-                </Link>
+            <div className="flex gap-4 justify-end items-center my-4">
                 <Button
-                    onClick={handleAtualizar}
-                    className="px-4 py-2 h-12 bg-blue-600 text-white rounded-md hover:bg-blue-500 flex items-center justify-center"
+                    type="button"
+                    className="flex items-center justify-center bg-roxoEscuro hover:bg-roxoClaro w-32"
+                    onClick={handleNovo}
                 >
-                    <RefreshCw size={18} /> {/* Ajuste o tamanho do ícone */}
+                    Novo
+                </Button>
+
+                <Button
+                    type="button"
+                    className="flex items-center justify-center bg-roxoEscuro hover:bg-roxoClaro w-32"
+                    onClick={handleAtualizar}
+                >
+                    Atualizar
                 </Button>
             </div>
 
             {
-                <div className="flex flex-col justify-center w-full container mx-auto mt-4">
+                <div className="flex flex-col justify-center w-full container mx-auto">
                     <DataTable columns={columns} data={pacientes} onRowClick={handleRowClick} />
                 </div>
 

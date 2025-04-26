@@ -22,17 +22,17 @@ export const columns: ColumnDef<MensalidadesData>[] = [
     {
         accessorKey: "actions",
         header: () => (
-            <div >Alterar</div> // Alinhamento à esquerda para o cabeçalho 
+            <div >Alterar</div> // Alinhamento à esquerda para o cabeçalho
         ),
         cell: ({ row }) => {
             // eslint-disable-next-line react-hooks/rules-of-hooks
             const router = useRouter();
-            const idPaciente = row.original.id; // Obtém o ID do paciente
+            const id = row.original.id; // Obtém o ID do paciente
             return (
                 <Button
                     className="bg-transparent border-none"
                     variant="ghost"
-                    onClick={() => router.push(`/private/mensalidades/edit/${idPaciente}`)}
+                    onClick={() => router.push(`/private/mensalidades/edit/${id}`)}
                 >
                     <Pencil color="red" size={16} />
                 </Button>
@@ -42,7 +42,7 @@ export const columns: ColumnDef<MensalidadesData>[] = [
     {
         accessorKey: "id",
         header: () => (
-            <div>Id</div> // Alinhamento à esquerda para o cabeçalho 
+            <div>Id</div> // Alinhamento à esquerda para o cabeçalho
         ),
     },
     {
@@ -62,7 +62,7 @@ export const columns: ColumnDef<MensalidadesData>[] = [
     {
         accessorKey: "mes",
         header: () => (
-            <div>Mês Referência</div> // Alinhamento à esquerda para o cabeçalho 
+            <div>Mês Referência</div> // Alinhamento à esquerda para o cabeçalho
         ),
     },
     {
@@ -81,9 +81,9 @@ export const columns: ColumnDef<MensalidadesData>[] = [
         cell: ({ row }) => {
             const rawDate = row.getValue("dataMensalidade") as string;
             const date = new Date(rawDate);
-            // Ajusta a data para o fuso horário local 
+            // Ajusta a data para o fuso horário local
             const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-            const formattedDate = localDate.toLocaleDateString("pt-BR"); // Formata a data no formato dd/MM/yyyy 
+            const formattedDate = localDate.toLocaleDateString("pt-BR"); // Formata a data no formato dd/MM/yyyy
 
             return formattedDate;
         },
@@ -106,19 +106,19 @@ export const columns: ColumnDef<MensalidadesData>[] = [
     {
         accessorKey: "pago",
         header: () => (
-            <div>Pago</div> // Alinhamento à esquerda para o cabeçalho 
+            <div>Pago</div> // Alinhamento à esquerda para o cabeçalho
         ),
     },
     {
         accessorKey: "visualizar",
         header: () => (
-            <div>Visualizar</div> // Alinhamento à esquerda para o cabeçalho 
+            <div>Visualizar</div> // Alinhamento à esquerda para o cabeçalho
         ),
     },
     {
         accessorKey: "cpfUsuarioLogado",
         header: () => (
-            <div>C.P.F. Gerador</div> // Alinhamento à esquerda para o cabeçalho 
+            <div>C.P.F. Gerador</div> // Alinhamento à esquerda para o cabeçalho
         ),
     },
 ];
