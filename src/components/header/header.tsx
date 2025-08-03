@@ -1,27 +1,24 @@
 "use client";
 
-import Link from "next/link";
-import React from "react";
-import { SignOutButton } from "../signOutButton";
-import { signOut, useSession } from "next-auth/react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import { usePacienteContext } from "@/context/PacienteContext";
-import { Search, X } from "lucide-react";
+import { X } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 
 export function Header() {
     const { data: session } = useSession(); // Usa `useSession` no client-side
     const { pacienteSelecionado } = usePacienteContext();
 
     return (
-        <header className="shadow-sm fixed w-full h-16 flex items-center bg-nubank text-slate-900 px-4">
+        <header className="shadow-md fixed w-full h-16 flex items-center bg-sidebar text-slate-900 px-4">
             {/* Centro do header */}
             <div className="flex w-full justify-center items-center space-x-2">
                 {pacienteSelecionado ? (
                     <p
                         className="text-black-500"
                     >
-                        <Link href="/private/pacientes" className="hover:underline">
+                        Paciente:
+                        <Link href="/private/pacientes" className="hover:underline ml-2">
                             {pacienteSelecionado.nome}
                         </Link>
                     </p>

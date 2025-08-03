@@ -19,7 +19,11 @@ const config: Config = {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			colors: {
-				nubank: '#820AD1',
+				nubank: '#cccccc',
+				sidebar: '#009900',
+				butonSidebar: '#236477',
+				//nubank: '#8853ED',
+				// nubank: '#820AD1',
 				roxoClaro: '#B266FF',
 				roxoEscuro: '#5E0AA8',
 				verdeMenta: '#00C9A7',

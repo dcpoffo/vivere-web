@@ -74,7 +74,7 @@ export function DataTable<TData extends { id: string }, TValue>({
             )}
 
 
-            <div className="border w-full">
+            <div className="border border-black w-full rounded-md">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -101,7 +101,7 @@ export function DataTable<TData extends { id: string }, TValue>({
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
                                     onClick={() => onRowClick?.(row.original.id)} // Chama a função onRowClick com o id da linha
-                                    style={{ cursor: "pointer" }} // Para indicar que a linha é clicável
+                                //style={{ cursor: "pointer" }} // Para indicar que a linha é clicável
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
@@ -113,7 +113,7 @@ export function DataTable<TData extends { id: string }, TValue>({
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    No results.
+                                    Nenhum registro encontrado
                                 </TableCell>
                             </TableRow>
                         )}
@@ -128,7 +128,7 @@ export function DataTable<TData extends { id: string }, TValue>({
                 </span>
 
                 <Button
-                    className="bbg-nubank hover:bg-roxoEscuro"
+                    className="hover:bg-roxoEscuro"
                     variant="ghost"
                     size="sm"
                     onClick={() => table.previousPage()}
@@ -137,7 +137,7 @@ export function DataTable<TData extends { id: string }, TValue>({
                     <CircleArrowLeft />
                 </Button>
                 <Button
-                    className="bg-nubank hover:bg-roxoEscuro"
+                    className="hover:bg-roxoEscuro"
                     variant="ghost"
                     size="sm"
 

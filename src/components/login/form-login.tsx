@@ -56,7 +56,7 @@ const LoginForm = () => {
 
     return (
         // <div className="w-full flex-grow flex items-center justify-center">
-        <div className="w-full h-screen flex flex-col justify-center items-center bg-nubank">
+        <div className="w-full h-screen flex flex-col justify-center items-center ">
 
             <form
                 onSubmit={handleLogin}

@@ -41,7 +41,7 @@ export function Sidebar() {
 
             {/* Sidebar */}
             <div
-                className={`fixed top-0 left-0 h-full w-64 bg-nubank shadow-lg transform ${isOpen ? "translate-x-0" : "-translate-x-full"
+                className={`fixed top-0 left-0 h-full w-64 bg-sidebar shadow-lg transform ${isOpen ? "translate-x-0" : "-translate-x-full"
                     } transition-transform duration-300 z-40`}
             >
                 {/* Botão de fechar */}
@@ -62,7 +62,7 @@ export function Sidebar() {
                         { label: "Mensalidades", icon: DollarSign, path: "/private/mensalidades" },
                         { label: "Exames Complementares", icon: Stethoscope, path: "/private/exames" },
                         { label: "Atendimentos", icon: Activity, path: "/private/atendimentos" },
-                        { label: "Osteopatia", icon: Crosshair, path: "/private/osteopatia" },
+                        { label: "Osteopatia", icon: Crosshair, path: "/private/osteopatias" },
                     ].map(({ label, icon: Icon, path }) => (
                         <Link
                             key={path}
@@ -70,7 +70,10 @@ export function Sidebar() {
                             onClick={isItemDisabled(path) ? undefined : handleCloseSidebar}
                         >
                             <div
-                                className={`flex items-center gap-3 p-2 rounded-md ${isItemDisabled(path) ? "bg-gray-500 cursor-not-allowed" : "bg-roxoClaro hover:bg-roxoEscuro"
+                                className={`
+                                        flex items-center gap-3 p-2 rounded-md ${isItemDisabled(path)
+                                        ? "bg-gray-500 cursor-not-allowed"
+                                        : "bg-butonSidebar hover:bg-butonSidebar/50 text-white"
                                     }`}
                             >
                                 <Icon size={20} />

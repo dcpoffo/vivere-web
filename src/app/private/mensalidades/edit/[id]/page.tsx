@@ -17,7 +17,7 @@ import { z } from "zod";
 const formSchema = z.object({
     dataMensalidade: z
         .string()
-        .regex(/^\d{4}-\d{2}-\d{2}$/, { message: "Data deve estar no formato yyyy-MM-dd" }),
+        .regex(/^\d{4}-\d{2}-\d{2}$/, { message: "Data deve estar no formato dd-MM-aaaa" }),
 
     pago: z
         .enum([ 'SIM', 'NÃO' ], { message: "Selecione uma observação válida" }),
@@ -83,6 +83,7 @@ export default function EditMensalidadePage() {
     const router = useRouter();
 
     const { reset } = form;
+
 
     useEffect(() => {
         async function fetchData() {

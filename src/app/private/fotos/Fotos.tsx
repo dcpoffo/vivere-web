@@ -165,7 +165,7 @@ export default function Fotos() {
 
 
                         <Image
-                            src={foto.caminho}
+                            src={foto?.caminho || "https://i.postimg.cc/dQ5z0SRk/imagem-nao-encontrada.png"}
                             alt={`Foto ${foto.id}`}
                             width={300}
                             height={200}

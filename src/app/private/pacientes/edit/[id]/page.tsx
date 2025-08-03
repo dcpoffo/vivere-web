@@ -301,7 +301,11 @@ export default function EditPacientePage() {
                                                 className="w-full border p-2 bg-white text-black"
                                             />
                                         </FormControl>
-                                        <FormDescription>Considerar o CPF com pontos e hífem (xxx.xxx.xxx-xx).</FormDescription>
+                                        <FormDescription
+                                            className="text-black"
+                                        >
+                                            Considerar o CPF com pontos e hífem (xxx.xxx.xxx-xx).
+                                        </FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}

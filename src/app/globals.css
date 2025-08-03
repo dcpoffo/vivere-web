@@ -8,7 +8,7 @@
 }
 
 .hidden-column {
-    display: none;
+  display: none;
 }
 
 :root {
@@ -92,6 +92,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }

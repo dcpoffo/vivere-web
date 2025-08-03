@@ -162,11 +162,10 @@ export default function Mensalidades() {
 
             {
                 !loading && mensalidades.length === 0 && (
-                    <p className="mt-4 text-gray-500">
+                    <p className="mt-4 text-black">
                         O paciente selecionado não possui mensalidades cadastrados.
                     </p>
-                )
-            }
+                )}
 
             {
                 !loading && mensalidades.length > 0 && (

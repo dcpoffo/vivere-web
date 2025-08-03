@@ -75,7 +75,6 @@ export default function NovaMensalidade() {
     const api = useAPI();
     const { toast } = useToast()
     const { reset } = form;
-    // const { reset } = useForm<z.infer<typeof formSchema>>();
 
     function getMonthName(monthNumber: number): "JANEIRO" | "FEVEREIRO" | "MARÇO" | "ABRIL" | "MAIO" | "JUNHO" | "JULHO" | "AGOSTO" | "SETEMBRO" | "OUTUBRO" | "NOVEMBRO" | "DEZEMBRO" {
         const months = [ "JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO" ] as const;
